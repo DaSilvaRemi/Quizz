@@ -4,7 +4,10 @@
 		"path": "."
 	  }
 	],
-	"settings": {},
+	"settings": {
+		"discord.enabled": true,
+		"rpc.enabled": true
+	},
 	"launch": {
 	  "version": "0.2.0",
 	  "configurations": [
