@@ -12,7 +12,7 @@ class JwtError(Exception):
         super().__init__(self.message)
 
 
-secret = "CHANGE ME"
+secret = "flask2023"
 expiration_in_seconds = 3600
 
 
