@@ -1,5 +1,7 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
+import jwt_utils
+import hashlib
 #source venv/Scripts/activate
 app = Flask(__name__)
 CORS(app)
@@ -12,6 +14,17 @@ def hello_world():
 @app.route('/quiz-info', methods=['GET'])
 def GetQuizInfo():
       return { "size": 0, "scores": [] }, 200
+
+@app.route('/login', methods=['POST'])
+def login():
+      payload: dict = request.get_json()
+      password = payload['password'].encode('UTF-8')
+      hashed = hashlib.md5(password).digest()
+
+      if hashed != b'\xd8\x17\x06PG\x92\x93\xc1.\x02\x01\xe5\xfd\xf4_@':
+            return 'Unauthorized', 401
+
+      return {"token": jwt_utils.build_token()}, 200
 
 if __name__ == "__main__":
     app.run()
