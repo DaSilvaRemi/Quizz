@@ -32,30 +32,33 @@ def login():
 
 
 @app.route('/questions', methods=['POST'])
-def postQuestions():
+def post_questions():
     authorization = request.headers.get('Authorization')
-    if authorization is None:
+    if not authorization or not authorization.startswith('Bearer '):
         return 'Unauthorized', 401
 
-    authorization = authorization.split(" ")[1]
-
+    token = authorization.split(" ")[1]
     try:
-        jwt_utils.decode_token(authorization)
+        jwt_utils.decode_token(token)
     except Exception as e:
         return 'Unauthorized', 401
 
-    body = request.get_json()
-    print('body : ', body)
-    question = Question.from_json(body)
-    question.save()
-
-    return question.to_json()
+    try:
+        question_data = request.get_json()
+        question = Question.from_json(question_data)
+        question.save()
+        return question.to_json()
+    except Exception as e:
+        return 'Bad Request', 400
 
 @app.route('/questions/<id_question>', methods=['GET'])
 def getQuestionById(id_question):
-    myQuestion: Question = Question.get_by_id(id_question)
-
-    return myQuestion.to_json()
+    try:
+      myQuestion: Question = Question.get_by_id(id_question)
+      return myQuestion.to_json()
+    except Exception as e:
+        return 'Request respond Not Found', 404
+   
 
 
 
