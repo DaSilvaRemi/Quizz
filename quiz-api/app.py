@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import jwt_utils
 import hashlib
+from models import Question
 #source venv/Scripts/activate
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +26,23 @@ def login():
             return 'Unauthorized', 401
 
       return {"token": jwt_utils.build_token()}, 200
+
+@app.route('/questions', methods=['POST'])
+def postQuestions():
+      authorization = request.headers.get('Authorization')
+      authorization = authorization.split(" ")[1]
+      try:
+            jwt_utils.decode_token(authorization)
+      except Exception as e:
+            return 'Unauthorized', 401
+
+      body = request.get_json()
+      print('body : ', body)
+      question: Question = Question.from_json(body)
+      question.save()
+
+      return question.to_json()
+
 
 if __name__ == "__main__":
     app.run()
