@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS "possibleAnswer" (
 );
 CREATE TABLE IF NOT EXISTS "question" (
 	"id_question"	INTEGER NOT NULL,
-	"text"	TEXT NOT NULL,
 	"title"	TEXT NOT NULL,
+	"text"	TEXT NOT NULL,
 	"image"	TEXT NOT NULL,
 	"position"	INTEGER NOT NULL,
 	PRIMARY KEY("id_question" AUTOINCREMENT)
