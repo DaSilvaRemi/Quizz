@@ -16,13 +16,16 @@ class ConnectionManager(object):
 
     def execute(self, query, *args) -> Cursor:
         cursor = self.connection.cursor()
-        cursor.execute("begin")
+        if not query.lower().startswith("select"):
+            cursor.execute("begin")
         try:
             result: Cursor = cursor.execute(query, args)
-            cursor.execute("commit")
+            if not query.lower().startswith("select"):
+                cursor.execute("commit")
             return result
         except:
-            cursor.execute("rollback")
+            if not query.lower().startswith("select"):
+                cursor.execute("rollback")
             raise
 
     def __del__(self):
