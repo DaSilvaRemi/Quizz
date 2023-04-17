@@ -86,7 +86,7 @@ class PossibleAnswer():
                                         self.id_question, self.id_possible_answer)
 
     def delete(self) -> None:
-        query = "DELETE FROM WHERE id_possible_answer=?"
+        query = "DELETE FROM possibleAnswer WHERE id_possible_answer=?"
         ConnectionManager().execute(query, self.id_possible_answer)
 
     @staticmethod
@@ -133,5 +133,3 @@ class PossibleAnswer():
     @staticmethod
     def from_json(json: dict) -> 'PossibleAnswer':
         return PossibleAnswer(json.get("id", None), json['text'], json['isCorrect'], json.get("id_question", None))
-
-    # finir CRUD
