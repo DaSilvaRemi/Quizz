@@ -133,3 +133,92 @@ class PossibleAnswer():
     @staticmethod
     def from_json(json: dict) -> 'PossibleAnswer':
         return PossibleAnswer(json.get("id", None), json['text'], json['isCorrect'], json.get("id_question", None))
+    
+class Participation:
+    def __init__(self, id_player, id_question) -> None:
+        self.id_player = id_player
+        self.id_question = id_question
+
+    def save(self) -> None:
+        if self.id_player is not None and self.id_question is not None:
+            query = "INSERT INTO participation (id_player, id_question) VALUES (?, ?)"
+            ConnectionManager().execute(query, self.id_player, self.id_question)
+        elif self.id_player is not None and self.id_question is None :
+            query = "UPDATE participation SET id_question=? WHERE id_player=?"
+            ConnectionManager().execute(query, self.id_question, self.id_player)
+        else:
+            query = "UPDATE participation SET id_player=? WHERE id_question=?"
+            ConnectionManager().execute(query, self.id_player, self.id_question)
+
+    def delete(self) -> None:
+        query = "DELETE FROM participation WHERE id_player=? AND id_question=?"
+        ConnectionManager().execute(query, self.id_player, self.id_question)
+
+    def deleteByIdPlayer(self) -> None:
+        query = "DELETE FROM participation WHERE id_player=?"
+        ConnectionManager().execute(query, self.id_player)
+
+    def deleteByIdQuestion(self) -> None:
+        query = "DELETE FROM participation WHERE id_question=?"
+        ConnectionManager().execute(query, self.id_question)
+
+    @staticmethod
+    def getByIdPlayerAndQuestion(id_player : int, id_question: int) -> 'Participation':
+        connexionManager = ConnectionManager()
+        query = "SELECT * FROM participation WHERE id_player=? AND id_question=?"
+        query_result = connexionManager.execute(query, id_player, id_question)
+        elements = query_result.fetchone()
+
+        if elements is None:
+            return None
+
+        return Participation(elements[0], elements[1])
+    
+    def getByIdPlayer(id_player : int) -> list['Participation']:
+        connexionManager = ConnectionManager()
+        query = "SELECT * FROM participation WHERE id_player=?"
+        query_result = connexionManager.execute(query, id_player)
+        elements = query_result.fetchall()
+
+        if elements is None:
+            return None
+        
+        participations = []
+
+        for element in elements:
+            id_player, id_question = element
+            participations.append(Participation(id_player, id_question))
+
+        return participations
+
+    @staticmethod
+    def getByIdQuestion(id_question) -> list['Participation']:
+        connexionManager = ConnectionManager()
+        query = "SELECT * FROM participation WHERE id_question=?"
+        query_result = connexionManager.execute(query, id_question)
+        elements = query_result.fetchall()
+
+        if elements is None:
+            return None
+
+        participations = []
+
+        for element in elements:
+            id_player, id_question = element
+            participations.append(Participation(id_player, id_question))
+
+
+        return participations
+
+    def to_json(self) -> dict:
+        return {
+            "id_player": self.id_player,
+            "id_question": self.id_question
+        }
+
+    def __str__(self):
+        return str(self.to_json())
+
+    @staticmethod
+    def from_json(json: dict) -> 'Participation':
+        return Participation(json.get("id_player", None), json.get("id_question", None))
