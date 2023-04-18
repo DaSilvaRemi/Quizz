@@ -3,6 +3,7 @@ from flask_cors import CORS
 import jwt_utils
 import hashlib
 from models import Question, Participation
+from http import HTTPStatus
 # source venv/Scripts/activate
 app = Flask(__name__)
 CORS(app)
@@ -28,20 +29,20 @@ def login():
     if hashed != b'\xd8\x17\x06PG\x92\x93\xc1.\x02\x01\xe5\xfd\xf4_@':
         return 'Unauthorized', 401
 
-    return {"token": jwt_utils.build_token()}, 200
+    return {"token": jwt_utils.build_token()}, HTTPStatus.OK.value
 
 
 @app.route('/questions', methods=['POST'])
 def post_questions():
     authorization = request.headers.get('Authorization')
     if not authorization or not authorization.startswith('Bearer '):
-        return 'Unauthorized', 401
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
 
     token = authorization.split(" ")[1]
     try:
         jwt_utils.decode_token(token)
     except Exception as e:
-        return 'Unauthorized', 401
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
 
     try:
         question_data = request.get_json()
@@ -49,7 +50,7 @@ def post_questions():
         question.save()
         return question.to_json()
     except Exception as e:
-        return 'Bad Request', 400
+        return HTTPStatus.BAD_REQUEST.description, HTTPStatus.BAD_REQUEST.value
 
 @app.route('/questions/<id_question>', methods=['GET'])
 def get_question_by_id(id_question):
@@ -57,7 +58,7 @@ def get_question_by_id(id_question):
       myQuestion: Question = Question.get_by_id(id_question)
       return myQuestion.to_json()
     except Exception as e:
-        return 'Request respond Not Found', 404
+        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
 @app.route('/participations', methods=['POST'])
 def post_participations():
