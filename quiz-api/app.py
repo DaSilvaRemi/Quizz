@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 import jwt_utils
 import hashlib
-from models import Question
+from models import Question, Participation
 # source venv/Scripts/activate
 app = Flask(__name__)
 CORS(app)
@@ -52,16 +52,27 @@ def post_questions():
         return 'Bad Request', 400
 
 @app.route('/questions/<id_question>', methods=['GET'])
-def getQuestionById(id_question):
+def get_question_by_id(id_question):
     try:
       myQuestion: Question = Question.get_by_id(id_question)
       return myQuestion.to_json()
     except Exception as e:
         return 'Request respond Not Found', 404
-   
 
+@app.route('/participations', methods=['POST'])
+def post_participations():
+      body = request.get_json()
 
+      #get player by his name
 
+      id_player = 0
+
+      position_answers = body['answers']
+      #get questions
+      for i in range(0, len(position_answers)):
+          position_answer = position_answers[i]
+          Participation(id_player, i + 1)
+          #TO DO VERIF REPONSE
 
 if __name__ == "__main__":
     app.run()
