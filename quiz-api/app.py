@@ -59,6 +59,16 @@ def get_question_by_id(id_question):
     except Exception as e:
         return 'Request respond Not Found', 404
 
+@app.route('/questions/<id_question>', methods=['DELETE'])
+def delete_question_by_id(id_question):
+    try:
+      myQuestion = Question.get_by_id(id_question)
+      myQuestion.delete()
+      return 'Succeeded', 204
+    except Exception as e:
+        return 'Unauthorized', 401
+
+
 @app.route('/participations', methods=['POST'])
 def post_participations():
       body = request.get_json()

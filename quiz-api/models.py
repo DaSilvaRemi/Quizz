@@ -26,9 +26,11 @@ class Question():
             possible_answer.id_question = self.id_question
             possible_answer.save()
 
-    def delete(self):
-        # N'oublie pas d'appeler la méthode delete de chaque PossibleAnswer avant de delete ton objet (à cause des clés étrangères)
-        pass
+    def delete(self) -> None:
+        for possibleAnswer in self.possible_answers:
+            possibleAnswer.delete()
+        query = "DELETE FROM question WHERE id_question=?"
+        ConnectionManager().execute(query, self.id_question)
 
     @staticmethod
     def get_by_id(id_question) -> 'Question':
