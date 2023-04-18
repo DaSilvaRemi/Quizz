@@ -46,8 +46,16 @@ class Question():
         return Question(id, title, text, image, position, PossibleAnswer.getByIdQuestion(id))
 
     @staticmethod
-    def get_by_position() -> 'Question':
-        pass
+    def get_by_position(position_question) -> 'Question':
+        query = "SELECT * FROM question WHERE question.position=?"
+        result = ConnectionManager().execute(query, position_question)
+        res = result.fetchone()
+
+        if res is None:
+            return None
+
+        id, title, text, image, position = res
+        return Question(id, title, text, image, position, PossibleAnswer.getByIdQuestion(id))
 
     def to_json(self) -> dict:
         return {
