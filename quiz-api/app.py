@@ -32,8 +32,11 @@ def login():
     return {"token": jwt_utils.build_token()}, HTTPStatus.OK.value
 
 
+
+# QUESTIONS
+
 @app.route('/questions', methods=['POST'])
-def post_questions():
+def create_new_question():
     authorization = request.headers.get('Authorization')
     if not authorization or not authorization.startswith('Bearer '):
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
@@ -55,8 +58,8 @@ def post_questions():
 @app.route('/questions/<id_question>', methods=['GET'])
 def get_question_by_id(id_question):
     try:
-      myQuestion: Question = Question.get_by_id(id_question)
-      return myQuestion.to_json()
+        myQuestion = Question.get_by_id(id_question)
+        return myQuestion.to_json()
     except Exception as e:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
@@ -64,21 +67,24 @@ def get_question_by_id(id_question):
 @app.route('/questions', methods=['GET'])
 def get_question_by_position():
     try:
-      position = request.args.get('position')
-      myQuestion = Question.get_by_position(position)
-      return myQuestion.to_json()
+        position = request.args.get('position')
+        myQuestion = Question.get_by_position(position)
+        return myQuestion.to_json()
     except Exception as e:
-        return 'Request respond Not Found', 404
+        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
 @app.route('/questions/<id_question>', methods=['DELETE'])
 def delete_question_by_id(id_question):
     try:
-      myQuestion = Question.get_by_id(id_question)
-      myQuestion.delete()
-      return 'Succeeded', 204
+        myQuestion = Question.get_by_id(id_question)
+        myQuestion.delete()
+        return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
-        return 'Unauthorized', 401
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
 
+
+
+# PARTICIPATIONS
 
 @app.route('/participations', methods=['POST'])
 def post_participations():

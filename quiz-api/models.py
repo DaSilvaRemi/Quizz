@@ -14,13 +14,11 @@ class Question():
     def save(self) -> None:
         if self.id_question is None:
             query = "INSERT INTO question (title, text, image, position) VALUES (?, ?, ?, ?)"
-            result = ConnectionManager().execute(
-                query, self.title, self.text, self.image, self.position)
+            result = ConnectionManager().execute(query, self.title, self.text, self.image, self.position)
             self.id_question = result.lastrowid
         else:
             query = "UPDATE question SET title=?, text=?, image=?, position=? WHERE id_question=?"
-            ConnectionManager().execute(query, self.title, self.text,
-                                        self.image, self.position, self.id_question)
+            ConnectionManager().execute(query, self.title, self.text, self.image, self.position, self.id_question)
 
         for possible_answer in self.possible_answers:
             possible_answer.id_question = self.id_question
@@ -34,9 +32,8 @@ class Question():
 
     @staticmethod
     def get_by_id(id_question) -> 'Question':
-        connexionManager = ConnectionManager()
         query = "SELECT * FROM question WHERE id_question=?"
-        result = connexionManager.execute(query, id_question)
+        result = ConnectionManager().execute(query, id_question)
         res = result.fetchone()
 
         if res is None:
@@ -87,13 +84,11 @@ class PossibleAnswer():
     def save(self) -> None:
         if self.id_possible_answer is None:
             query = "INSERT INTO possibleAnswer (text, isCorrect, id_question) VALUES (?, ?, ?)"
-            result = ConnectionManager().execute(
-                query, self.text, self.isCorrect, self.id_question)
+            result = ConnectionManager().execute(query, self.text, self.isCorrect, self.id_question)
             self.id_possible_answer = result.lastrowid
         else:
             query = "UPDATE possibleAnswer SET text=?, isCorrect=?, id_question=? WHERE id_possible_answer=?"
-            ConnectionManager().execute(query, self.text, self.isCorrect,
-                                        self.id_question, self.id_possible_answer)
+            ConnectionManager().execute(query, self.text, self.isCorrect, self.id_question, self.id_possible_answer)
 
     def delete(self) -> None:
         query = "DELETE FROM possibleAnswer WHERE id_possible_answer=?"
