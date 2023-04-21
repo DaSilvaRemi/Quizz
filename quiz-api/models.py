@@ -24,11 +24,20 @@ class Question():
             possible_answer.id_question = self.id_question
             possible_answer.save()
 
+    # def get_all_questions() -> list[int]:
+    #     query = "SELECT question.id_question FROM question"
+    #     result = ConnectionManager().execute(query).fetchall()
+    #     return result
+
     def delete(self) -> None:
         for possibleAnswer in self.possible_answers:
             possibleAnswer.delete()
         query = "DELETE FROM question WHERE id_question=?"
         ConnectionManager().execute(query, self.id_question)
+
+    def delete_all() -> None:
+        query = "DELETE FROM question"
+        ConnectionManager().execute(query)
 
     @staticmethod
     def get_by_id(id_question) -> 'Question':

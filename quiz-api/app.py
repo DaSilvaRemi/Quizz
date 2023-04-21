@@ -82,6 +82,13 @@ def delete_question_by_id(id_question):
     except Exception as e:
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
 
+@app.route('/questions/all', methods=['DELETE'])
+def delete_all_questions():
+    try:
+        Question.delete_all()
+        return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
+    except Exception as e:
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
 
 
 # PARTICIPATIONS
