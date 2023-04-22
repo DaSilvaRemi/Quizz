@@ -186,6 +186,11 @@ class Participation:
         query = "DELETE FROM participation WHERE id_player=? AND id_question=?"
         ConnectionManager().execute(query, self.id_player, self.id_question)
 
+    @staticmethod
+    def delete_all() -> None:
+        query = "DELETE FROM participation"
+        ConnectionManager().execute(query)
+
     def delete_by_id_player(self) -> None:
         query = "DELETE FROM participation WHERE id_player=?"
         ConnectionManager().execute(query, self.id_player)

@@ -102,7 +102,7 @@ def delete_all_questions():
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
 
     try:
-        Question.delete_all()
+        Participation.delete_all()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
