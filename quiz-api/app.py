@@ -3,28 +3,22 @@ from flask_cors import CORS
 import jwt_utils
 import hashlib
 from models import Question, Participation, Player, PossibleAnswer
+from utils import ConnectionManager
 from http import HTTPStatus
 # source venv/Scripts/activate
 app = Flask(__name__)
 CORS(app)
 
-
-@app.route('/')
-def hello_world():
-    x = 'bonjegrgegour'
-    return f"Hello, {x}"
-
-
+# UTILS ENDPOINTS
 @app.route('/quiz-info', methods=['GET'])
-def GetQuizInfo():
+def get_quiz_info():
     scores = []
     players: list[Player] = Player.get_all_player()
 
     for player in players:
         scores.append({"playerName": player.name,"score": player.score})
 
-    return {"size": Question.get_nb_questions(), "scores": scores}, 200
-
+    return {"size": Question.get_nb_questions(), "scores": scores}, HTTPStatus.OK.value
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -33,9 +27,24 @@ def login():
     hashed = hashlib.md5(password).digest()
 
     if hashed != b'\xd8\x17\x06PG\x92\x93\xc1.\x02\x01\xe5\xfd\xf4_@':
-        return 'Unauthorized', 401
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
 
     return {"token": jwt_utils.build_token()}, HTTPStatus.OK.value
+
+@app.route('/rebuild-db', methods=['POST'])
+def rebuild_db():
+    authorization = request.headers.get('Authorization')
+    if not authorization or not authorization.startswith('Bearer '):
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
+    token = authorization.split(" ")[1]
+    try:
+        jwt_utils.decode_token(token)
+    except Exception as e:
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
+    ConnectionManager().create()
+    return "Ok", HTTPStatus.OK.value
 
 # QUESTIONS
 
@@ -140,7 +149,7 @@ def post_participations():
 
     player.save()
 
-    return {"playerName": player.name, "score": player.score}
+    return {"playerName": player.name, "score": player.score}, HTTPStatus.OK.value
         
 
 
