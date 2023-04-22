@@ -117,18 +117,18 @@ def post_participations():
 
     possible_answers_position: list = body['answers']
 
-    # TO DO RECUP TOUTE les questions pour compter leur nombres ou faire une méthode permettant de les compter
+    # Verifie si le joueur a bien repondu a toute les questions
     nb_questions_in_bdd = Question.get_nb_questions()
     if len(possible_answers_position) != nb_questions_in_bdd:
         return HTTPStatus.BAD_REQUEST.description, HTTPStatus.BAD_REQUEST.value
 
     player.save()
 
-    # Pour chaque re
+    # Pour chaque reponse on verifie si le joueur a bien répondu et dans ce cas on lui ajoute un point
     for i in range(0, len(possible_answers_position)):
         possible_answer_position = possible_answers_position[i]
         position_question = i + 1
-        # TO DO VERIF REPONSE
+
         question = Question.get_by_position(position_question)
         participation = Participation(player.id_player, question.id_question)
         possible_answer: PossibleAnswer = question.possible_answers[possible_answer_position - 1]
