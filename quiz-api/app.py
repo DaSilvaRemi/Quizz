@@ -98,7 +98,6 @@ def post_participations():
       body = request.get_json()
 
       #get player by his name
-
       id_player = 0
 
       position_answers = body['answers']

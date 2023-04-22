@@ -51,7 +51,7 @@ class Question():
             return None
 
         id, title, text, image, position = res
-        return Question(id, title, text, image, position, PossibleAnswer.getByIdQuestion(id))
+        return Question(id, title, text, image, position, PossibleAnswer.get_by_id_question(id))
 
     @staticmethod
     def get_by_position(position_question) -> 'Question':
@@ -63,7 +63,7 @@ class Question():
             return None
 
         id, title, text, image, position = res
-        return Question(id, title, text, image, position, PossibleAnswer.getByIdQuestion(id))
+        return Question(id, title, text, image, position, PossibleAnswer.get_by_id_question(id))
 
     def to_json(self) -> dict:
         return {
@@ -109,7 +109,7 @@ class PossibleAnswer():
         ConnectionManager().execute(query, self.id_possible_answer)
 
     @staticmethod
-    def getById(id_possible_answer) -> 'PossibleAnswer':
+    def get_by_id(id_possible_answer) -> 'PossibleAnswer':
         connexionManager = ConnectionManager()
         query = "SELECT * FROM possibleAnswer WHERE id_possible_answer=?"
         query_result = connexionManager.execute(query, id_possible_answer)
@@ -121,7 +121,7 @@ class PossibleAnswer():
         return PossibleAnswer(elements[0], elements[1], elements[2], elements[3])
 
     @staticmethod
-    def getByIdQuestion(id_question) -> list['PossibleAnswer']:
+    def get_by_id_question(id_question) -> list['PossibleAnswer']:
         connexionManager = ConnectionManager()
         query = "SELECT * FROM possibleAnswer WHERE possibleAnswer.id_question=?"
         query_result = connexionManager.execute(query, id_question)
@@ -175,16 +175,16 @@ class Participation:
         query = "DELETE FROM participation WHERE id_player=? AND id_question=?"
         ConnectionManager().execute(query, self.id_player, self.id_question)
 
-    def deleteByIdPlayer(self) -> None:
+    def delete_by_id_player(self) -> None:
         query = "DELETE FROM participation WHERE id_player=?"
         ConnectionManager().execute(query, self.id_player)
 
-    def deleteByIdQuestion(self) -> None:
+    def delete_by_id_question(self) -> None:
         query = "DELETE FROM participation WHERE id_question=?"
         ConnectionManager().execute(query, self.id_question)
 
     @staticmethod
-    def getByIdPlayerAndQuestion(id_player: int, id_question: int) -> 'Participation':
+    def get_by_id_player_and_question(id_player: int, id_question: int) -> 'Participation':
         connexionManager = ConnectionManager()
         query = "SELECT * FROM participation WHERE id_player=? AND id_question=?"
         query_result = connexionManager.execute(query, id_player, id_question)
@@ -195,7 +195,7 @@ class Participation:
 
         return Participation(elements[0], elements[1])
 
-    def getByIdPlayer(id_player: int) -> list['Participation']:
+    def get_by_id_player(id_player: int) -> list['Participation']:
         connexionManager = ConnectionManager()
         query = "SELECT * FROM participation WHERE id_player=?"
         query_result = connexionManager.execute(query, id_player)
@@ -213,7 +213,7 @@ class Participation:
         return participations
 
     @staticmethod
-    def getByIdQuestion(id_question) -> list['Participation']:
+    def get_by_id_question(id_question) -> list['Participation']:
         connexionManager = ConnectionManager()
         query = "SELECT * FROM participation WHERE id_question=?"
         query_result = connexionManager.execute(query, id_question)
@@ -244,103 +244,105 @@ class Participation:
         return Participation(json.get("id_player", None), json.get("id_question", None))
 
 # Admin
-    class Admin():
-        def __init__(self, id_admin: int, password: str) -> None:
-            self.id_admin = id_admin
-            self.password = password
 
-        def save(self) -> None:
-            if self.id_admin is None:
-                query = "INSERT INTO admin(password) VALUES (?)"
-                result = ConnectionManager().execute(query, self.password)
-                self.id_admin = result.lastrowid
-            else:
-                query = "UPDATE admin SET password = ? WHERE id_admin = ?"
-                ConnectionManager().execute(query, self.password, self.id_admin)
 
-        def delete(self) -> None:
-            query = "DELETE FROM admin WHERE id_admin = ? "
-            ConnectionManager().execute(query, self.id_admin)
+class Admin():
+    def __init__(self, id_admin: int, password: str) -> None:
+        self.id_admin = id_admin
+        self.password = password
 
-        @staticmethod
-        def get_by_id(id_admin) -> 'Admin':
-            query = "SELECT * FROM admin WHERE id_admin = ? "
-            result = ConnectionManager().execute(query, id_admin)
-            res = result.fetchone()
+    def save(self) -> None:
+        if self.id_admin is None:
+            query = "INSERT INTO admin(password) VALUES (?)"
+            result = ConnectionManager().execute(query, self.password)
+            self.id_admin = result.lastrowid
+        else:
+            query = "UPDATE admin SET password = ? WHERE id_admin = ?"
+            ConnectionManager().execute(query, self.password, self.id_admin)
 
-            if res is None:
-                return None
+    def delete(self) -> None:
+        query = "DELETE FROM admin WHERE id_admin = ? "
+        ConnectionManager().execute(query, self.id_admin)
 
-            id, password = res
-            return Admin(id, password)
+    @staticmethod
+    def get_by_id(id_admin) -> 'Admin':
+        query = "SELECT * FROM admin WHERE id_admin = ? "
+        result = ConnectionManager().execute(query, id_admin)
+        res = result.fetchone()
 
-        def to_json(self) -> dict:
-            return {
-                "id_admin": self.id_admin,
-                "id_password": self.password
-            }
+        if res is None:
+            return None
 
-        def __str__(self):
-            return str(self.to_json())
+        id, password = res
+        return Admin(id, password)
 
-        @staticmethod
-        def from_json(json: dict) -> 'Admin':
-            return Admin(json.get("id_admin", None), json.get("id_password", None))
+    def to_json(self) -> dict:
+        return {
+            "id_admin": self.id_admin,
+            "id_password": self.password
+        }
+
+    def __str__(self):
+        return str(self.to_json())
+
+    @staticmethod
+    def from_json(json: dict) -> 'Admin':
+        return Admin(json.get("id_admin", None), json.get("id_password", None))
 
 
 # Player
-    class Player():
-        def __init__(self, id_player: int, name: str, score: str) -> None:
-            self.id_player = id_player
-            self.name = name
-            self.score = score
+class Player():
+    def __init__(self, id_player: int, name: str, score: str) -> None:
+        self.id_player = id_player
+        self.name = name
+        self.score = score
 
-        def save(self) -> None:
-            if self.id_player is None:
-                query = "INSERT INTO player(name, score) VALUES (?, ?)"
-                result = ConnectionManager().execute(query, self.name, self.score)
-                self.id_player = result.lastrowid
-            else:
-                query = "UPDATE player SET name = ?, score = ? WHERE id_player = ?"
-                ConnectionManager().execute(query, self.name, self.score, self.id_player)
+    def save(self) -> None:
+        if self.id_player is None:
+            query = "INSERT INTO player(name, score) VALUES (?, ?)"
+            result = ConnectionManager().execute(query, self.name, self.score)
+            self.id_player = result.lastrowid
+        else:
+            query = "UPDATE player SET name = ?, score = ? WHERE id_player = ?"
+            ConnectionManager().execute(query, self.name, self.score, self.id_player)
 
-        def delete(self) -> None:
-            query = "DELETE FROM player WHERE id_player = ? "
-            ConnectionManager().execute(query, self.id_player)
+    def delete(self) -> None:
+        query = "DELETE FROM player WHERE id_player = ? "
+        ConnectionManager().execute(query, self.id_player)
 
-        @staticmethod
-        def get_by_id(id_player) -> 'Player':
-            query = "SELECT * FROM player WHERE id_player = ? "
-            result = ConnectionManager().execute(query, id_player)
-            res = result.fetchone()
+    @staticmethod
+    def get_by_id(id_player) -> 'Player':
+        query = "SELECT * FROM player WHERE id_player = ? "
+        result = ConnectionManager().execute(query, id_player)
+        res = result.fetchone()
 
-            if res is None:
-                return None
+        if res is None:
+            return None
 
-            id, name, score = res
-            return Player(id, name, score)
-        
-        @staticmethod
-        def get_by_name(name) -> 'Player':
-            query = "SELECT * FROM player WHERE name = ? "
-            result = ConnectionManager().execute(query, name)
-            res = result.fetchone()
+        id, name, score = res
+        return Player(id, name, score)
 
-            if res is None:
-                return None
-            id, name, score = res
-            return Player(id,name,score)
+    @staticmethod
+    def get_by_name(name) -> 'Player':
+        query = "SELECT * FROM player WHERE name = ? "
+        result = ConnectionManager().execute(query, name)
+        res = result.fetchone()
 
-        def to_json(self) -> dict:
-            return {
-                "id_player": self.id_player,
-                "name": self.name,
-                "score": self.score
-            }
+        if res is None:
+            return None
+        id, name, score = res
+        return Player(id, name, score)
 
-        def __str__(self):
-            return str(self.to_json())
+    def to_json(self) -> dict:
+        return {
+            "id_player": self.id_player,
+            "name": self.name,
+            "score": self.score
+        }
 
-        @staticmethod
-        def from_json(json: dict) -> 'Player':
-            return Player(json.get("id_player", None), json.get("name", None), json.get("score", None))
+    def __str__(self):
+        return str(self.to_json())
+
+    @staticmethod
+    def from_json(json: dict) -> 'Player':
+        return Player(json.get("id_player", None), json.get("name", None), json.get("score", None))
