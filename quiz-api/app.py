@@ -110,3 +110,12 @@ def post_participations():
 
 if __name__ == "__main__":
     app.run()
+
+@app.route('/participations/all', methods=['DELETE'])
+def delete_all_participations():
+    try:
+        Participation.delete_all()
+        return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
+    except Exception as e:
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
