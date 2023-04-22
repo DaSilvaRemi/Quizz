@@ -17,9 +17,7 @@ class ConnectionManager(object):
         return cls.instance
 
     def create(self):
-        # Ouvrez le fichier SQL
         with open('./data.db.sql', 'r') as f:
-            # Exécutez le script SQL
             self.connection.executescript(f.read())
 
     def execute(self, query, *args) -> Cursor:
