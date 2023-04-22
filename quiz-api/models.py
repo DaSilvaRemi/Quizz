@@ -26,20 +26,31 @@ class Question():
             possible_answer.id_question = self.id_question
             possible_answer.save()
 
-    # def get_all_questions() -> list[int]:
-    #     query = "SELECT question.id_question FROM question"
-    #     result = ConnectionManager().execute(query).fetchall()
-    #     return result
-
     def delete(self) -> None:
         for possibleAnswer in self.possible_answers:
             possibleAnswer.delete()
         query = "DELETE FROM question WHERE id_question=?"
         ConnectionManager().execute(query, self.id_question)
 
+    @staticmethod
     def delete_all() -> None:
         query = "DELETE FROM question"
         ConnectionManager().execute(query)
+
+    @staticmethod
+    def get_nb_questions() -> int:
+        query = "SELECT COUNT(*) FROM question"
+        query_result = ConnectionManager().execute(query)
+        return  query_result.fetchone()[0]
+
+    @staticmethod
+    def get_all_questions() -> list['Question']:
+        query = "SELECT * FROM question;"
+        result = ConnectionManager().execute(query).fetchall()
+
+        # TIPS : PREND EXEMPLE DE LA METHODE get_all_player de Player
+
+        return result
 
     @staticmethod
     def get_by_id(id_question) -> 'Question':
@@ -90,18 +101,18 @@ class PossibleAnswer():
     def __init__(self, id_possible_answer: int, text: str, isCorrect: bool, id_question: int) -> None:
         self.id_possible_answer = id_possible_answer
         self.text = text
-        self.isCorrect = isCorrect == 1
+        self.is_correct = isCorrect == 1
         self.id_question = id_question
 
     def save(self) -> None:
         if self.id_possible_answer is None:
             query = "INSERT INTO possibleAnswer (text, isCorrect, id_question) VALUES (?, ?, ?)"
             result = ConnectionManager().execute(
-                query, self.text, self.isCorrect, self.id_question)
+                query, self.text, self.is_correct, self.id_question)
             self.id_possible_answer = result.lastrowid
         else:
             query = "UPDATE possibleAnswer SET text=?, isCorrect=?, id_question=? WHERE id_possible_answer=?"
-            ConnectionManager().execute(query, self.text, self.isCorrect,
+            ConnectionManager().execute(query, self.text, self.is_correct,
                                         self.id_question, self.id_possible_answer)
 
     def delete(self) -> None:
@@ -127,10 +138,10 @@ class PossibleAnswer():
         query_result = connexionManager.execute(query, id_question)
         elements = query_result.fetchall()
 
-        if elements is None:
-            return None
-
         possiblesAnswers = []
+
+        if elements is None:
+            return possiblesAnswers
 
         for element in elements:
             id, text, isCorrect, id_question = element
@@ -143,7 +154,7 @@ class PossibleAnswer():
         return {
             "id": self.id_possible_answer,
             "text": self.text,
-            "isCorrect": self.isCorrect,
+            "isCorrect": self.is_correct,
             "id_question": self.id_question
         }
 
@@ -156,7 +167,7 @@ class PossibleAnswer():
 
 
 class Participation:
-    def __init__(self, id_player, id_question) -> None:
+    def __init__(self, id_player: int, id_question: int) -> None:
         self.id_player = id_player
         self.id_question = id_question
 
@@ -195,6 +206,7 @@ class Participation:
 
         return Participation(elements[0], elements[1])
 
+    @staticmethod
     def get_by_id_player(id_player: int) -> list['Participation']:
         connexionManager = ConnectionManager()
         query = "SELECT * FROM participation WHERE id_player=?"
@@ -244,8 +256,6 @@ class Participation:
         return Participation(json.get("id_player", None), json.get("id_question", None))
 
 # Admin
-
-
 class Admin():
     def __init__(self, id_admin: int, password: str) -> None:
         self.id_admin = id_admin
@@ -311,6 +321,23 @@ class Player():
         ConnectionManager().execute(query, self.id_player)
 
     @staticmethod
+    def get_all_player() -> list['Player']:
+        query = "SELECT * FROM player ORDER BY score DESC"
+        query_result = ConnectionManager().execute(query)
+        elements = query_result.fetchall()
+
+        players = []
+
+        if elements is None:
+            return players
+
+        for element in elements:
+            id, name, score = element
+            players.append(Player(id, name, score))
+
+        return players
+
+    @staticmethod
     def get_by_id(id_player) -> 'Player':
         query = "SELECT * FROM player WHERE id_player = ? "
         result = ConnectionManager().execute(query, id_player)
@@ -330,6 +357,7 @@ class Player():
 
         if res is None:
             return None
+        
         id, name, score = res
         return Player(id, name, score)
 
