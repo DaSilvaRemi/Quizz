@@ -3,6 +3,7 @@ from sqlite3 import Connection, Cursor, Error
 
 DB_FILE_PATH = './quiz.db'
 
+
 class ConnectionManager(object):
     instance: 'ConnectionManager' = None
     connection: Connection = None
@@ -10,7 +11,8 @@ class ConnectionManager(object):
     def __new__(cls, *args, **kwargs) -> 'ConnectionManager':
         if not cls.instance:
             cls.instance = super().__new__(cls)
-            cls.instance.connection = sqlite3.connect(DB_FILE_PATH, check_same_thread=False)
+            cls.instance.connection = sqlite3.connect(
+                DB_FILE_PATH, check_same_thread=False)
             cls.instance.connection.isolation_level = None
         return cls.instance
 
@@ -30,3 +32,5 @@ class ConnectionManager(object):
 
     def __del__(self):
         self.connection.close()
+
+

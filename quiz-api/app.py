@@ -84,6 +84,16 @@ def delete_question_by_id(id_question):
 
 @app.route('/questions/all', methods=['DELETE'])
 def delete_all_questions():
+    authorization = request.headers.get('Authorization')
+    if not authorization or not authorization.startswith('Bearer '):
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
+    token = authorization.split(" ")[1]
+    try:
+        jwt_utils.decode_token(token)
+    except Exception as e:
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
     try:
         Question.delete_all()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
@@ -112,9 +122,19 @@ if __name__ == "__main__":
 
 @app.route('/participations/all', methods=['DELETE'])
 def delete_all_participations():
+    authorization = request.headers.get('Authorization')
+    if not authorization or not authorization.startswith('Bearer '):
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
+    token = authorization.split(" ")[1]
+    try:
+        jwt_utils.decode_token(token)
+    except Exception as e:
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
     try:
         Participation.delete_all()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
-        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+        return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
 
