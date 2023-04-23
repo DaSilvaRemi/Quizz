@@ -12,6 +12,17 @@ class Question():
         self.possible_answers = possible_answers
 
     def save(self) -> None:
+        # Test pour ++position
+        position_already_exists = len(
+            ConnectionManager().execute(
+                "SELECT question.position FROM question WHERE question.position=?", self.position
+            ).fetchall()
+        ) != 0
+        if position_already_exists:
+            query = "UPDATE question SET position=position+1 WHERE position>=?"
+            ConnectionManager().execute(query, self.position)
+
+        
         if self.id_question is None:
             query = "INSERT INTO question (title, text, image, position) VALUES (?, ?, ?, ?)"
             result = ConnectionManager().execute(
