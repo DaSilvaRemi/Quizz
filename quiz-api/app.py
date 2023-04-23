@@ -112,12 +112,22 @@ def get_question_by_position():
 
 @app.route('/questions/<id_question>', methods=['DELETE'])
 def delete_question_by_id(id_question):
+    authorization = request.headers.get('Authorization')
+    if not authorization or not authorization.startswith('Bearer '):
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
+    token = authorization.split(" ")[1]
+    try:
+        jwt_utils.decode_token(token)
+    except Exception as e:
+        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+
+
     myQuestion = Question.get_by_id(id_question)
     if not myQuestion:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
     try:
-        myQuestion = Question.get_by_id(id_question)
         myQuestion.delete()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
