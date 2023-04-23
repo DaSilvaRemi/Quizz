@@ -34,6 +34,7 @@ class Question():
 
     @staticmethod
     def delete_all() -> None:
+        PossibleAnswer.delete_all()
         query = "DELETE FROM question"
         ConnectionManager().execute(query)
 
