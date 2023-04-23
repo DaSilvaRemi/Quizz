@@ -77,6 +77,28 @@ def get_question_by_id(id_question):
     except Exception as e:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
+@app.route('/questions/<id_question>', methods=['PUT'])
+def update_question_by_id(id_question):
+    try:
+        myQuestion = Question.get_by_id(id_question)
+        new_data = request.get_json()
+
+        myQuestion.image    = new_data['image']
+        myQuestion.position = new_data['position']
+        myQuestion.text     = new_data['text']
+        myQuestion.title    = new_data['title']
+
+        myQuestion.delete_possible_answers()
+        for new_possible_answer in new_data['possibleAnswers']:
+            newPossibleAnswer = PossibleAnswer.from_json(new_possible_answer)
+            newPossibleAnswer.id_question = id_question
+            newPossibleAnswer.save()
+
+        myQuestion.save()
+        return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
+    except Exception as e:
+        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
+
 
 @app.route('/questions', methods=['GET'])
 def get_question_by_position():

@@ -26,9 +26,12 @@ class Question():
             possible_answer.id_question = self.id_question
             possible_answer.save()
 
-    def delete(self) -> None:
+    def delete_possible_answers(self) -> None:
         for possibleAnswer in self.possible_answers:
             possibleAnswer.delete()
+
+    def delete(self) -> None:
+        self.delete_possible_answers()
         query = "DELETE FROM question WHERE id_question=?"
         ConnectionManager().execute(query, self.id_question)
 
@@ -119,6 +122,11 @@ class PossibleAnswer():
     def delete(self) -> None:
         query = "DELETE FROM possibleAnswer WHERE id_possible_answer=?"
         ConnectionManager().execute(query, self.id_possible_answer)
+
+    @staticmethod
+    def delete_all() -> None:
+        query = "DELETE FROM possibleAnswer"
+        ConnectionManager().execute(query)
 
     @staticmethod
     def get_by_id(id_possible_answer) -> 'PossibleAnswer':
