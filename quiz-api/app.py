@@ -112,6 +112,10 @@ def get_question_by_position():
 
 @app.route('/questions/<id_question>', methods=['DELETE'])
 def delete_question_by_id(id_question):
+    myQuestion = Question.get_by_id(id_question)
+    if not myQuestion:
+        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
+
     try:
         myQuestion = Question.get_by_id(id_question)
         myQuestion.delete()
