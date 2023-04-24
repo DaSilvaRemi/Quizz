@@ -231,8 +231,7 @@ class Participation:
         ConnectionManager().execute(query, self.id_player, self.id_question)
 
         player = Player.get_by_id(self.id_player)
-        player.score = 0
-        player.save()
+        player.delete()
 
     @staticmethod
     def delete_all() -> None:
