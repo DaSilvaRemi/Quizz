@@ -12,17 +12,38 @@ class Question():
         self.possible_answers = possible_answers
 
     def save(self) -> None:
-        # Test pour ++position
-        position_already_exists = len(
-            ConnectionManager().execute(
-                "SELECT question.position FROM question WHERE question.position=?", self.position
-            ).fetchall()
-        ) != 0
-        if position_already_exists:
-            query = "UPDATE question SET position=position+1 WHERE position>=?"
-            ConnectionManager().execute(query, self.position)
+        """
+        Ajoute ou modifie une ligne existante
 
-        
+        Si la position de la question existe déjà
+            - Si la question existe
+                - new_pos > old_pos, on décrémente toute les positions entre ]old_pos; new_pos]
+                - new_pos < old_pos, on incrémente toute les positions entre [position; position]
+            - Sinon
+                On incrémente toute les position au dessus de la position qui sera insérée
+        """
+
+        position_already_exists = len(ConnectionManager().execute(
+            "SELECT question.position FROM question WHERE question.position=?", self.position).fetchall()) != 0
+
+        if position_already_exists:
+            if self.id_question is None:
+                query = "UPDATE question SET position=position+1 WHERE position >= ?"
+                ConnectionManager().execute(query, self.position)
+            else:
+                query = "SELECT question.position FROM question WHERE question.id_question=?"
+                res = ConnectionManager().execute(query, self.id_question).fetchone()
+
+                # Si new_pos > old_pos, on décrémente toute les positions entre ]old_pos; new_pos]
+                # Si new_pos < old_pos, on incrémente toute les positions entre [position; position] . 
+                if self.position > res[0]:
+                    query = "UPDATE question SET position=position-1 WHERE position > ? AND position <= ?"
+                    ConnectionManager().execute(query, res[0], self.position)
+                elif self.position < res[0]:
+                    query = "UPDATE question SET position=position+1 WHERE position >= ? AND position < ?"
+                    ConnectionManager().execute(query, self.position, res[0])
+
+        # Insertion uniquement si l'id de la question est vide puis modifications des possible answers
         if self.id_question is None:
             query = "INSERT INTO question (title, text, image, position) VALUES (?, ?, ?, ?)"
             result = ConnectionManager().execute(
@@ -46,6 +67,9 @@ class Question():
         query = "DELETE FROM question WHERE id_question=?"
         ConnectionManager().execute(query, self.id_question)
 
+        query = "UPDATE question SET position=position-1 WHERE position > ?"
+        ConnectionManager().execute(query, self.position)
+
     @staticmethod
     def delete_all() -> None:
         PossibleAnswer.delete_all()
@@ -56,7 +80,7 @@ class Question():
     def get_nb_questions() -> int:
         query = "SELECT COUNT(*) FROM question"
         query_result = ConnectionManager().execute(query)
-        return  query_result.fetchone()[0]
+        return query_result.fetchone()[0]
 
     @staticmethod
     def get_all_questions() -> list['Question']:
@@ -206,10 +230,16 @@ class Participation:
         query = "DELETE FROM participation WHERE id_player=? AND id_question=?"
         ConnectionManager().execute(query, self.id_player, self.id_question)
 
+        player = Player.get_by_id(self.id_player)
+        player.score = 0
+        player.save()
+
     @staticmethod
     def delete_all() -> None:
         query = "DELETE FROM participation"
         ConnectionManager().execute(query)
+
+        Player.delete_all()
 
     def delete_by_id_player(self) -> None:
         query = "DELETE FROM participation WHERE id_player=?"
@@ -281,6 +311,8 @@ class Participation:
         return Participation(json.get("id_player", None), json.get("id_question", None))
 
 # Admin
+
+
 class Admin():
     def __init__(self, id_admin: int, password: str) -> None:
         self.id_admin = id_admin
@@ -346,6 +378,12 @@ class Player():
         ConnectionManager().execute(query, self.id_player)
 
     @staticmethod
+    def delete_all() -> None:
+        query = "DELETE FROM player"
+        ConnectionManager().execute(query)
+
+
+    @staticmethod
     def get_all_player() -> list['Player']:
         query = "SELECT * FROM player ORDER BY score DESC"
         query_result = ConnectionManager().execute(query)
@@ -382,7 +420,7 @@ class Player():
 
         if res is None:
             return None
-        
+
         id, name, score = res
         return Player(id, name, score)
 
