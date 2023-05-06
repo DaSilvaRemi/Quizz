@@ -187,11 +187,6 @@ def post_participations():
 
     return {"playerName": player.name, "score": player.score}, HTTPStatus.OK.value
         
-
-
-if __name__ == "__main__":
-    app.run()
-
 @app.route('/participations/all', methods=['DELETE'])
 def delete_all_participations():
     authorization = request.headers.get('Authorization')
@@ -210,3 +205,6 @@ def delete_all_participations():
     except Exception as e:
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
 
+
+if __name__ == "__main__":
+    app.run()
