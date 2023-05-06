@@ -15,7 +15,7 @@
     </tbody>
   </table>
   <div class="text-center">
-    <RouterLink to="/start-new-quiz-page" class="btn btn-primary">Démarrer le quiz !</RouterLink>
+    <RouterLink to="/new-quiz" class="btn btn-primary">Démarrer le quiz !</RouterLink>
   </div>
 </template>
 
