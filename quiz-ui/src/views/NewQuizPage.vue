@@ -29,9 +29,6 @@ export default {
       participationStorageService.savePlayerName(this.username);
       this.$router.push('/questions');
     }
-  },
-  async created() {
-    console.log("Composant New Quiz page 'created'");
   }
 };
 </script>

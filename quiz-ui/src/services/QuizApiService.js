@@ -21,6 +21,7 @@ export default {
       data,
     })
       .then((response) => {
+
         return { status: response.status, data: response.data };
       })
       .catch((error) => {
@@ -35,6 +36,8 @@ export default {
   },
   getQuestionByPosition(position) {
     return this.call("get", `questions?position=${position}`)
+  },
+  postParticipation(playerName, answers){
+    return this.call("post", `participations`, {playerName, answers});
   }
-
 };

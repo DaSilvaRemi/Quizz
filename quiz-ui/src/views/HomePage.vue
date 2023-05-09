@@ -35,15 +35,17 @@ export default {
     quizApiService.getQuizInfo()
       .then((response) => {
         if (response.status !== 200) {
-          console.error(`CODE : ${response.status} getQuizInfo`);
-          return null;
+          const ERROR = `CODE : ${response.status} getQuestionByPosition`
+          console.error(ERROR);
+          return Promise.reject(ERROR);
         }
 
         this.registeredScores = [...response.data.scores];
       }
+      ).catch((error) => {
+        console.log(error);
+      }
       );
-
-    console.log("Composant Home page 'created'");
   }
 };
 </script>
