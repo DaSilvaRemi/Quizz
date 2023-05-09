@@ -1,6 +1,6 @@
 <template>
     <div class="text-center">
-        <p>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</p>
+        <h2>Question {{ currentQuestionPosition }} / {{ totalNumberOfQuestion }}</h2>
         <QuestionDisplay :question="currentQuestion" @answer-selected="answerClickedHandler" />
     </div>
 </template>
@@ -17,7 +17,7 @@ export default {
     },
     data() {
         return {
-            currentQuestion: null,
+            currentQuestion: {},
             currentQuestionPosition: 1,
             totalNumberOfQuestion: 1,
             playerAnswers: []
@@ -31,11 +31,11 @@ export default {
                         const ERROR = `CODE : ${response.status} getQuestionByPosition`
                         return Promise.reject(ERROR);
                     }
-
-                    this.currentQuestion = response;
+                    
+                    this.currentQuestion = response.data;
                 }
                 ).catch((error) => {
-                    console.log(error)
+                    console.log(error);
                 }
                 )
                 ;
@@ -59,7 +59,8 @@ export default {
                         return Promise.reject(ERROR);
                     }
 
-                    this.$router.push('/home');
+                    participationStorageService.saveParticipationScore(response.data.score);
+                    this.$router.push('/score');
                 }
                 ).catch((error) => {
                     console.log(error);
@@ -72,16 +73,16 @@ export default {
             .then((response) => {
                 if (response.status !== 200) {
                     const ERROR = `CODE : ${response.status} getQuestionByPosition`
-                    console.error(ERROR);
                     return Promise.reject(ERROR);
                 }
 
-                this.totalNumberOfQuestion = response.size;
+                this.totalNumberOfQuestion = response.data.size;
             }
             ).catch((error) => {
                 console.log(error);
             }
             );
+        this.loadQuestionByPosition();
     },
 }
 

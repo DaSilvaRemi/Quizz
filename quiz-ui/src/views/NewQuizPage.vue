@@ -21,11 +21,12 @@ export default {
   name: "NewQuizPage",
   data() {
     return {
-      username: participationStorageService.getPlayerName();
+      username: ''
     };
   },
   methods: {
     launchNewQuiz(){
+      participationStorageService.clear();
       participationStorageService.savePlayerName(this.username);
       this.$router.push('/questions');
     }
