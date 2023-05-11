@@ -1,18 +1,22 @@
 <template>
-    <h1>Se connecter</h1>
-    <form @submit.prevent="submit">
-        <!-- Password input -->
-        <div class="form-outline mb-4">
-            <input type="password" id="form2Example2" class="form-control" required v-model="password" />
-            <label class="form-label" for="form2Example2">Password</label>
-        </div>
+    <div class="d-flex flex-column align-items-center pt-5">
+        <h1>Se connecter</h1>
 
-        <!-- Submit button -->
-        <button type="submit" class="btn btn-primary btn-block mb-4" @click="login">Connexion</button>
-    </form>
+        <form style="width: 22rem;" @submit.prevent="submit">
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input type="password" id="form2Example2" class="form-control" placeholder="Mot de passe..." required v-model="password" />
+            </div>
 
-    <!-- Alerte mauvais mot de passe -->
-    <p v-if="error" class="alert alert-danger">Mot de passe incorrect</p>
+            <!-- Submit button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-block mb-4" @click="login">Connexion</button>
+            </div>
+        </form>
+
+        <!-- Alerte mauvais mot de passe -->
+        <p v-if="error" class="alert alert-danger">Mot de passe incorrect</p>
+    </div>
 </template>
 
 <script>
@@ -31,13 +35,13 @@ export default {
             quizApiService
                 .postLogin(this.password)
                 .then(response => {
-                    if (!response) {
-                        this.error = true;
-                        return;
-                    };
-                    console.log(response)
-                    this.$router.push('/list-question-page');
-                })
+                        if (!response) {
+                            this.error = true;
+                            return;
+                        };
+                        console.log(response)
+                        this.$router.push('/list-question-page');
+                    })
                 .catch(e => console.error(e));
         }
     }
