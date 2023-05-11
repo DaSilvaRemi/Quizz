@@ -29,7 +29,6 @@ export default {
     },
     methods: {
         selectAnswer(possibleAnswerIndex) {
-            console.log('selectAnswer ', possibleAnswerIndex)
             this.$emit('answer-selected', possibleAnswerIndex + 1);
         }
     },

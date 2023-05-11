@@ -11,19 +11,13 @@ export default {
     components: {
         ScoreListDisplay
     },
-    props: {
-        getScorePromise: {
-            type: Promise,
-            default: quizApiService.getQuizInfo()
-        }
-    },
     data() {
         return {
             registeredScores: []
         };
     },
     async created() {
-        this.getScorePromise
+        quizApiService.getQuizInfo()
             .then((response) => {
                 if (response.status !== 200) {
                     const ERROR = `CODE : ${response.status} getQuestionByPosition`
@@ -35,7 +29,7 @@ export default {
             ).catch((error) => {
                 console.log(error);
             }
-            );
+            );        
     }
 };
 </script>
