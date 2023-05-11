@@ -37,7 +37,10 @@ export default {
   getQuestionByPosition(position) {
     return this.call("get", `questions?position=${position}`)
   },
-  postParticipation(playerName, answers){
-    return this.call("post", `participations`, {playerName, answers});
-  }
+  postParticipation(playerName, answers) {
+    return this.call("post", `participations`, { playerName, answers });
+  },
+  postLogin(myPassword) {
+    return this.call("post", "login", { "password": myPassword });
+  },
 };
