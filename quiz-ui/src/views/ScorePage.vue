@@ -24,7 +24,7 @@ export default {
         };
     },
     created() {
-        if(participationStorageService.getParticipationScore() === ""){
+        if(!participationStorageService.getParticipationScore()){
             this.$router.push('/home');
         }
 
