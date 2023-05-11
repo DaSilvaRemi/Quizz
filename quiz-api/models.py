@@ -22,7 +22,6 @@ class Question():
             - Sinon
                 On incrémente toute les position au dessus de la position qui sera insérée
         """
-
         position_already_exists = len(ConnectionManager().execute(
             "SELECT question.position FROM question WHERE question.position=?", self.position).fetchall()) != 0
 

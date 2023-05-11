@@ -26,6 +26,7 @@ export default {
       })
       .catch((error) => {
         console.error(error);
+        return Promise.reject({ status: error.response.status, error: error.response.statusText });
       });
   },
   getQuizInfo() {
@@ -42,5 +43,8 @@ export default {
   },
   postLogin(myPassword) {
     return this.call("post", "login", { "password": myPassword });
+  },
+  postQuestion(titre, intitule, image, position, possibleAnswers, token){
+    return this.call("post", `questions`, {"title": titre, "text": intitule, "image": image, "position": position, "possibleAnswers": possibleAnswers}, token);
   },
 };
