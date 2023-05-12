@@ -21,6 +21,7 @@
 
 <script>
 import quizApiService from "@/services/QuizApiService.js";
+import participationStorageService from "@/services/ParticipationStorageService.js";
 
 export default {
     name: "AdminLogin",
@@ -38,8 +39,10 @@ export default {
                         if (!response) {
                             this.error = true;
                             return;
-                        };
-                        console.log(response)
+                        }
+
+                        console.log(response);
+                        participationStorageService.saveToken(response.data.token);
                         this.$router.push('/list-question-page');
                     })
                 .catch(e => console.error(e));
