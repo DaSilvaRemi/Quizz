@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="d-flex flex-column align-items-center pt-5">
         <div class="card" style="width: 18rem;">
             <div class="card-header">
                 <h6>Question n°{{ question.position }}</h6>
