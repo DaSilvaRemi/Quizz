@@ -83,9 +83,20 @@ class Question():
 
     @staticmethod
     def get_all_questions() -> list['Question']:
+        questions = []
+
         query = "SELECT * FROM question;"
-        query_result = ConnectionManager().execute(query)
-        return query_result.fetchall()
+        results = ConnectionManager().execute(query).fetchall()
+
+        if results is None:
+            return None
+
+        for res in results:
+            id, title, text, image, position = res
+            question = Question(id, title, text, image, position, PossibleAnswer.get_by_id_question(id))
+            questions.append(question)
+
+        return questions
 
     @staticmethod
     def get_by_id(id_question) -> 'Question':

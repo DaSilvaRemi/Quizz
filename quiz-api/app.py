@@ -93,7 +93,7 @@ def get_all_question():
         questions = Question.get_all_questions()
 
         for question in questions:
-            questions_json['questions'].append(question)
+            questions_json['questions'].append(question.to_json())
 
         return questions_json
     except Exception as e:
