@@ -77,6 +77,28 @@ def get_question_by_id(id_question):
     except Exception as e:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
+@app.route('/questions', methods=['GET'])
+def get_question_by_position():
+    try:
+        position = request.args.get('position')
+        myQuestion = Question.get_by_position(position)
+        return myQuestion.to_json()
+    except Exception as e:
+        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
+    
+@app.route('/questions/all', methods=['GET'])
+def get_all_question():
+    try:
+        questions_json = {"questions": []}
+        questions = Question.get_all_questions()
+
+        for question in questions:
+            questions_json['questions'].append(question)
+
+        return questions_json
+    except Exception as e:
+        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
+    
 @app.route('/questions/<id_question>', methods=['PUT'])
 def update_question_by_id(id_question):
     try:
@@ -98,17 +120,6 @@ def update_question_by_id(id_question):
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
-
-
-@app.route('/questions', methods=['GET'])
-def get_question_by_position():
-    try:
-        position = request.args.get('position')
-        myQuestion = Question.get_by_position(position)
-        return myQuestion.to_json()
-    except Exception as e:
-        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
-
 
 @app.route('/questions/<id_question>', methods=['DELETE'])
 def delete_question_by_id(id_question):

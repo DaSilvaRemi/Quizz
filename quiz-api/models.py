@@ -84,11 +84,8 @@ class Question():
     @staticmethod
     def get_all_questions() -> list['Question']:
         query = "SELECT * FROM question;"
-        result = ConnectionManager().execute(query).fetchall()
-
-        # TIPS : PREND EXEMPLE DE LA METHODE get_all_player de Player
-
-        return result
+        query_result = ConnectionManager().execute(query)
+        return query_result.fetchall()
 
     @staticmethod
     def get_by_id(id_question) -> 'Question':

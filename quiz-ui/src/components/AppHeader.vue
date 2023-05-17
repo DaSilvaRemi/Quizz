@@ -1,9 +1,9 @@
 <template>
   <header>
     <div class="wrapper">
-      <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-light bg-light">
         <div class="container-fluid">
-          <RouterLink class="navbar-brand" to="/">Navbar</RouterLink>
+          <RouterLink class="navbar-brand" to="/">Quizz-app</RouterLink>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
