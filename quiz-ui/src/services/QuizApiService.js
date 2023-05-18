@@ -60,6 +60,21 @@ export default {
       token
     );
   },
+  putQuestion(id, titre, intitule, image, position, possibleAnswers, token) {
+    return this.call(
+      "put",
+      `questions/${id}`,
+      {
+        id: id,
+        title: titre,
+        text: intitule,
+        image: image,
+        position: position,
+        possibleAnswers: possibleAnswers,
+      },
+      token
+    );
+  },
   getAllQuestions() {
     return this.call("get", "questions/all");
   },

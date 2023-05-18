@@ -22,7 +22,7 @@
             <img class="img-fluid" :src="form.image" :alt="form.image">
 
             <div class="form-outline mb-4">
-                <ImageUpload @file-change="handleChangeImage" />
+                <ImageUpload @file-change="handleChangeImage" :image="form.image" />
             </div>
 
             <table class="table">
@@ -54,9 +54,14 @@
                         class="bi bi-plus-circle-fill"></i></button>
             </table>
             <p v-if="error" class="alert alert-danger">{{ error }}</p>
-            <div class="text-center">
-                <button class="btn btn-primary btn-block mb-4" type="submit" @click="handleClickSubmitQuestion">{{
-                    submitButtonText }}</button>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <div class="text-center">
+                    <button class="btn btn-primary btn-block mb-4" type="submit" @click="handleClickSubmitQuestion">{{
+                        submitButtonText }}</button>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary btn-block mb-4" type="reset" @click="handleResetQuestion">Annuler</button>
+                </div>
             </div>
 
         </form>
@@ -92,6 +97,17 @@ export default {
             error: ""
         };
     },
+
+    updated(){
+        this.form =  {
+                titre: this.titre,
+                intitule: this.intitule,
+                position: this.position,
+                image: this.image,
+                possibleAnswers: [...this.possibleAnswers]
+            }
+    },
+    
     methods: {
         handleChangeImage(fileDataUrl) {
             this.form.image = fileDataUrl;
@@ -125,6 +141,10 @@ export default {
             }
 
             this.$emit("submit-question", this.form);
+        },
+        handleResetQuestion(){
+            this.$emit("reset-question", this.form);
+           
         }
     }
 }

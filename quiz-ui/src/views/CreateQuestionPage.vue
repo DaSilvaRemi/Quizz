@@ -58,7 +58,7 @@ export default {
                     return Promise.reject(ERROR);
                 }
 
-                this.$router.push("/list-questionss");
+                this.$router.push("/list-questions");
             }).catch((error) => {
                 console.error(error);
                 if (error.status === 401) {

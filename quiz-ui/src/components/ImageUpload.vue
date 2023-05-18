@@ -8,6 +8,12 @@
 export default {
     name: "ImageUpload",
     emits: ["file-change"],
+    props:{
+        image: {
+            type: String,
+            default: ""
+        }
+    },
     data() {
         return {
             isSaving: false,
@@ -29,6 +35,8 @@ export default {
             },
             false
         );
+        
+        this.fileInput.value = this.image;
     },
     methods: {
         handleChangeFile(event) {

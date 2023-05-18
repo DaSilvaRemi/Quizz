@@ -58,7 +58,7 @@ export default {
     },
     methods: {
         handleClickUpdateQuestion(index) {
-            this.$router.push(`/questions/${index}`);
+            this.$router.push(`/edit-questions/${index}`);
         },
         async handleClickDeleteQuestion(index) {
             quizApiService.deleteQuestionById(index, this.token)
