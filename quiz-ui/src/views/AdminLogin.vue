@@ -3,7 +3,7 @@
         <form class="w-25" @submit.prevent="submit">
             <h2 class="text-center mb-4">Se connecter</h2>
             <div class="form-outline mb-4">
-                <input class="form-control" type="password" id="mot-de-passe"  placeholder="Mot de passe..." required v-model="password" />
+              <input class="form-control" type="password" id="mot-de-passe"  placeholder="Mot de passe..." required v-model="password" />
             </div>
 
             <div class="text-center">
