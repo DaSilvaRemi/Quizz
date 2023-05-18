@@ -44,7 +44,7 @@ export default {
                     }
 
                     participationStorageService.saveToken(response.data.token);
-                    this.$router.push('/list-question-page');
+                    this.$router.push('/list-questions');
                 })
                 .catch((error) => {
                     console.error(error);

@@ -45,7 +45,7 @@ export default {
         if(!TOKEN){
             this.$router.push("/login");
         }else{
-            this.$router.push('/list-question-page');
+            this.$router.push('/list-questions');
         }
     },
   }

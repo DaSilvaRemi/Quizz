@@ -1,8 +1,8 @@
 <template>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <RouterLink v-if="routeName === 'listQuestionPage'" class="nav-link active"  to="/list-question-page">List Questions</RouterLink>
-            <RouterLink v-else class="nav-link" to="/create-questionlist-question-page">List Questions</RouterLink>
+            <RouterLink v-if="routeName === 'listQuestions'" class="nav-link active"  to="/list-questions">List Questions</RouterLink>
+            <RouterLink v-else class="nav-link" to="/list-questions">List Questions</RouterLink>
         </li>
         <li class="nav-item">
             <RouterLink v-if="routeName === 'createQuestion'" class="nav-link active"  to="/create-question">Create Question</RouterLink>

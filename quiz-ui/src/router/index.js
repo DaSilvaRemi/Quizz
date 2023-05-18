@@ -41,9 +41,14 @@ const router = createRouter({
       component: CreateQuestionPage,
     },
     {
-      path: "/list-questions-page",
-      name: "listQuestionsPage",
+      path: "/list-questions",
+      name: "listQuestions",
       component: ListQuestionsPage,
+    },
+    {
+      path: "/edit-questions/:id",
+      name: "editQuestion",
+      component: null,
     },
   ],
 });
