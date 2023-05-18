@@ -5,7 +5,8 @@
         <form style="width: 22rem;" @submit.prevent="submit">
             <!-- Password input -->
             <div class="form-outline mb-4">
-                <input type="password" id="form2Example2" class="form-control" placeholder="Mot de passe..." required v-model="password" />
+                <input type="password" id="form2Example2" class="form-control" placeholder="Mot de passe..." required
+                    v-model="password" />
             </div>
 
             <!-- Submit button -->
@@ -36,15 +37,15 @@ export default {
             quizApiService
                 .postLogin(this.password)
                 .then(response => {
-                        if (!response) {
-                            this.error = true;
-                            return;
-                        }
+                    if (!response) {
+                        this.error = true;
+                        return;
+                    }
 
-                        console.log(response);
-                        participationStorageService.saveToken(response.data.token);
-                        this.$router.push('/list-question-page');
-                    })
+                    console.log(response);
+                    participationStorageService.saveToken(response.data.token);
+                    this.$router.push('/list-questions-page');
+                })
                 .catch(e => console.error(e));
         }
     }

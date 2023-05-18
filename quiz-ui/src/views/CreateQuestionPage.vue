@@ -1,14 +1,7 @@
 <template>
-    <QuestionCRUForm 
-        :titre="titre"
-        :intitule="intitule"
-        :position="position"
-        :image="image"
-        :possibleAnswers="possibleAnswers"
-        titreForm="Créer une question"
-        submitButtonText="Créer"
-        @submit-question="handleSubmitQuestionEvent"
-    />
+    <QuestionCRUForm :titre="titre" :intitule="intitule" :position="position" :image="image"
+        :possibleAnswers="possibleAnswers" titreForm="Créer une question" submitButtonText="Créer"
+        @submit-question="handleSubmitQuestionEvent" />
 </template>
 
 <script>
@@ -41,7 +34,7 @@ export default {
         }
     },
     methods: {
-        async handleSubmitQuestionEvent(form) { 
+        async handleSubmitQuestionEvent(form) {
             quizApiService.postQuestion(
                 form.titre,
                 form.intitule,
@@ -55,10 +48,10 @@ export default {
                     return Promise.reject(ERROR);
                 }
 
-                this.$router.push("list-question-page");
+                this.$router.push("list-questions-page");
             }).catch((error) => {
                 console.error(error);
-                if(error.status === 401){
+                if (error.status === 401) {
                     participationStorageService.saveToken("");
                     this.$router.push("/login");
                 }
