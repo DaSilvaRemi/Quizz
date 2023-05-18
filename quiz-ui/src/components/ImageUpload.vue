@@ -1,14 +1,14 @@
 <template>
     <label class="form-label" for="image">Image</label>
-    <input class="form-control" type="file" name="uploadInput" :disabled="isSaving" 
-        accept="image/jpeg, image/png, image/gif" ref="fileInput" @change="handleChangeFile" required/>
+    <input class="form-control" type="file" name="uploadInput" :disabled="isSaving"
+        accept="image/jpeg, image/png, image/gif" ref="fileInput" @change="handleChangeFile" required />
     <button class="btn" v-if="file" @click="handleClickRemoveImage"><i class="bi bi-x-circle-fill"></i></button>
 </template>
 <script>
 export default {
     name: "ImageUpload",
     emits: ["file-change"],
-    props:{
+    props: {
         image: {
             type: String,
             default: ""
@@ -35,8 +35,23 @@ export default {
             },
             false
         );
-        
-        this.fileInput.value = this.image;
+
+        if(this.image){
+            this.file = this.base64ImgtoFile(this.image, "monImage");
+            
+            const DATA_TRANSFER = new DataTransfer();
+            DATA_TRANSFER.items.add(this.file);
+            this.$refs.fileInput.files = DATA_TRANSFER.files;
+        }
+    },
+    beforeUpdate() {
+        if (this.image) {
+            this.file = this.base64ImgtoFile(this.image, "monImage");
+            
+            const DATA_TRANSFER = new DataTransfer();
+            DATA_TRANSFER.items.add(this.file);
+            this.$refs.fileInput.files = DATA_TRANSFER.files;
+        }
     },
     methods: {
         handleChangeFile(event) {
@@ -54,7 +69,23 @@ export default {
             if (this.fileInput) {
                 this.fileInput.value = "";
             }
+        },
+        base64ImgtoFile(base64String, filename) {
+            const BASE_64_STRING_SPLITED = base64String.split(',');
+            
+            const MIME = BASE_64_STRING_SPLITED[0].match(/:(.*?);/)[1];
+            const BASE64_STRING_SPLITED_DECODED = atob(BASE_64_STRING_SPLITED[BASE_64_STRING_SPLITED.length - 1]);
+            
+            let base64StringSplitedDecodedLength = BASE64_STRING_SPLITED_DECODED.length;
+            const U_INT_8_ARRAY = new Uint8Array(base64StringSplitedDecodedLength);
+            
+            while (base64StringSplitedDecodedLength--) {
+                U_INT_8_ARRAY[base64StringSplitedDecodedLength] = BASE64_STRING_SPLITED_DECODED.charCodeAt(base64StringSplitedDecodedLength);
+            }
+
+            return new File([U_INT_8_ARRAY], filename, { type: MIME });
         }
+
     }
 };
 </script>

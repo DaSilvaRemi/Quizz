@@ -1,11 +1,7 @@
 <template>
     <AdminTabNav />
     <QuestionCRUForm 
-        :titre="titre"
-        :intitule="intitule"
-        :position="position"
-        :image="image"
-        :possibleAnswers="possibleAnswers"
+        :question="question"
         titreForm="Créer une question"
         submitButtonText="Créer"
         @submit-question="handleSubmitQuestionEvent"
@@ -26,11 +22,13 @@ export default {
     },
     data() {
         return {
-            titre: "",
-            intitule: "",
-            position: 1,
-            image: "",
-            possibleAnswers: [],
+            question: {
+                titre: "",
+                intitule: "",
+                position: 1,
+                image: "",
+                possibleAnswers: [],
+            },
             token: "",
             error: ""
         };
@@ -44,13 +42,13 @@ export default {
         }
     },
     methods: {
-        async handleSubmitQuestionEvent(form) {
+        async handleSubmitQuestionEvent(question) {
             quizApiService.postQuestion(
-                form.titre,
-                form.intitule,
-                form.image,
-                form.position,
-                form.possibleAnswers,
+                question.titre,
+                question.intitule,
+                question.image,
+                question.position,
+                question.possibleAnswers,
                 this.token
             ).then((response) => {
                 if (response.status !== 200) {

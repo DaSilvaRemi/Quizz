@@ -62,6 +62,7 @@ def create_new_question():
 
     try:
         question_data = request.get_json()
+        print(question_data)
         question = Question.from_json(question_data)
         question.save()
         return question.to_json()
@@ -108,7 +109,6 @@ def update_question_by_id(id_question):
     
     try:
         new_data = request.get_json()
-
         myQuestion.image    = new_data['image']
         myQuestion.position = new_data['position']
         myQuestion.text     = new_data['text']
@@ -117,6 +117,7 @@ def update_question_by_id(id_question):
         myQuestion.delete_possible_answers()
         for new_possible_answer in new_data['possibleAnswers']:
             newPossibleAnswer = PossibleAnswer.from_json(new_possible_answer)
+            newPossibleAnswer.id_possible_answer = None
             newPossibleAnswer.id_question = id_question
             newPossibleAnswer.save()
 

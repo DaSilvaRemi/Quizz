@@ -1,42 +1,34 @@
 <template>
-     <AdminTabNav />
-     <QuestionCRUForm 
-     :titre="titre"
-        :intitule="intitule"
-        :position="position"
-        :image="image"
-        :possibleAnswers="possibleAnswers"
-        titreForm="Editer une question"
-        submitButtonText="Editer"
-        @reset-question= "handleResetQuestionEvent"
-        @submit-question="handleSubmitQuestionEvent"
-    />
-  </template>
+    <AdminTabNav />
+    <QuestionCRUForm :question="question" titreForm="Editer une question" submitButtonText="Editer" @reset-question="handleResetQuestionEvent" @submit-question="handleSubmitQuestionEvent" />
+</template>
   
-  <script>
-  import quizApiService from "@/services/QuizApiService";
-  import AdminTabNav from "@/components/AdminTabNav.vue";
-  import QuestionCRUForm from "@/components/QuestionCRUForm.vue";
-  import participationStorageService from "@/services/ParticipationStorageService.js";
+<script>
+import quizApiService from "@/services/QuizApiService";
+import AdminTabNav from "@/components/AdminTabNav.vue";
+import QuestionCRUForm from "@/components/QuestionCRUForm.vue";
+import participationStorageService from "@/services/ParticipationStorageService.js";
 
 
-  export default {
+export default {
     name: "EditQuestionPage",
     components: {
         AdminTabNav,
         QuestionCRUForm
     },
     data() {
-      return {
-        id:0,
-        titre: "",
-            intitule: "",
-            position: 1,
-            image: "",
-            possibleAnswers: [],
+        return {
+            question: {
+                id: 0,
+                titre: "",
+                intitule: "",
+                position: 1,
+                image: "",
+                possibleAnswers: [],
+            },
             token: "",
             error: ""
-      };
+        };
     },
     async created() {
         this.token = participationStorageService.getToken();
@@ -45,43 +37,42 @@
             this.$router.push("/");
             return;
         }
-        this.id = this.$route.params.id;
-
-        quizApiService.getQuestionById(this.id).then((response) => {
-                if (response.status !== 200) {
-                    const ERROR = `CODE : ${response.status} postQuestion`
-                    return Promise.reject(ERROR);
-                }
         
-                this.titre = response.data.title;
-                this.intitule = response.data.text;
-                this.position = response.data.position;
-                this.image = response.data.image;
-                this.possibleAnswers = response.data.possibleAnswers;
-                console.log(this.titre);
+        this.question.id = this.$route.params.id;
 
-              
-                
-            }).catch((error) => {
-                console.error(error);
-                if (error.status === 401) {
-                    participationStorageService.saveToken("");
-                    this.$router.push("/login");
-                }
-            })
+        quizApiService.getQuestionById(this.question.id).then((response) => {
+            if (response.status !== 200) {
+                const ERROR = `CODE : ${response.status} postQuestion`
+                return Promise.reject(ERROR);
+            }
+
+            this.question.titre = response.data.title;
+            this.question.intitule = response.data.text;
+            this.question.position = response.data.position;
+            this.question.image = response.data.image;
+            this.question.possibleAnswers = response.data.possibleAnswers;
+        }).catch((error) => {
+            console.error(error);
+            if (error.status === 401) {
+                participationStorageService.saveToken("");
+                this.$router.push("/login");
+            }
+        })
     },
     methods: {
-        async handleSubmitQuestionEvent(form) {
+        async handleSubmitQuestionEvent(question) {
+            console.log(question.possibleAnswers);
+
             quizApiService.putQuestion(
-                this.id,
-                form.titre,
-                form.intitule,
-                form.image,
-                form.position,
-                form.possibleAnswers,
+                this.question.id,
+                question.titre,
+                question.intitule,
+                question.image,
+                question.position,
+                question.possibleAnswers,
                 this.token
             ).then((response) => {
-                if (response.status !== 200) {
+                if (response.status !== 204) {
                     const ERROR = `CODE : ${response.status} putQuestion`
                     return Promise.reject(ERROR);
                 }
@@ -95,9 +86,9 @@
                 }
             })
         },
-        handleResetQuestionEvent(){
+        handleResetQuestionEvent() {
             this.$router.push("/list-questions");
         }
     }
-  };
-  </script>
+};
+</script>
