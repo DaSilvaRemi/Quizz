@@ -29,18 +29,15 @@
                     </button>
                 </td>
             </tr>
-            <ValidationModal 
-                titre="Avertissement !"
-                body="Voulez vous supprimer cette question ?"
-                @modal-click-btn-ok="handleClickDeleteQuestion(question.id)"
-            />
+            <ValidationModal titre="Avertissement !" body="Voulez vous supprimer cette question ?"
+                @modal-click-btn-ok="handleClickDeleteQuestion(question.id)" />
         </tbody>
     </table>
-
 </template>
 
 
 <script>
+import participationStorageService from "@/services/ParticipationStorageService.js";
 import ValidationModal from "@/components/ValidationModal.vue"
 import quizApiService from "@/services/QuizApiService.js";
 export default {
@@ -75,6 +72,10 @@ export default {
                 }
                 ).catch((error) => {
                     console.error(error);
+                    if (error.status === 401) {
+                        participationStorageService.saveToken("");
+                        this.$router.push("/login");
+                    }
                 });
         },
         async loadAllQuestions() {
@@ -87,7 +88,7 @@ export default {
                     }
                     this.allQuestions = [...response.data.questions];
                 }).catch((error) => {
-                    console.error(error);
+                    console.error("error", error);
                 });
         }
     },

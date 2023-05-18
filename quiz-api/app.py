@@ -97,12 +97,16 @@ def get_all_question():
 
         return questions_json
     except Exception as e:
-        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
+        return HTTPStatus.INTERNAL_SERVER_ERROR.description, HTTPStatus.INTERNAL_SERVER_ERROR.value
     
 @app.route('/questions/<id_question>', methods=['PUT'])
 def update_question_by_id(id_question):
     try:
         myQuestion = Question.get_by_id(id_question)
+    except Exception as e:
+        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
+    
+    try:
         new_data = request.get_json()
 
         myQuestion.image    = new_data['image']
@@ -119,7 +123,7 @@ def update_question_by_id(id_question):
         myQuestion.save()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
-        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
+        return HTTPStatus.INTERNAL_SERVER_ERROR.description, HTTPStatus.INTERNAL_SERVER_ERROR.value
 
 @app.route('/questions/<id_question>', methods=['DELETE'])
 def delete_question_by_id(id_question):
@@ -142,7 +146,7 @@ def delete_question_by_id(id_question):
         myQuestion.delete()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
-        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+        return HTTPStatus.INTERNAL_SERVER_ERROR.description, HTTPStatus.INTERNAL_SERVER_ERROR.value
 
 
 @app.route('/questions/all', methods=['DELETE'])
@@ -161,7 +165,7 @@ def delete_all_questions():
         Question.delete_all()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
-        return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
+        return HTTPStatus.INTERNAL_SERVER_ERROR.description, HTTPStatus.INTERNAL_SERVER_ERROR.value
 
 
 # PARTICIPATIONS
@@ -214,7 +218,7 @@ def delete_all_participations():
         Participation.delete_all()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
-        return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
+        return HTTPStatus.INTERNAL_SERVER_ERROR.description, HTTPStatus.INTERNAL_SERVER_ERROR.value
 
 
 if __name__ == "__main__":

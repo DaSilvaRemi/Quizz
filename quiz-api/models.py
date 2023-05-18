@@ -34,7 +34,7 @@ class Question():
                 res = ConnectionManager().execute(query, self.id_question).fetchone()
 
                 # Si new_pos > old_pos, on décrémente toute les positions entre ]old_pos; new_pos]
-                # Si new_pos < old_pos, on incrémente toute les positions entre [position; position] . 
+                # Si new_pos < old_pos, on incrémente toute les positions entre [position; position] .
                 if self.position > res[0]:
                     query = "UPDATE question SET position=position-1 WHERE position > ? AND position <= ?"
                     ConnectionManager().execute(query, res[0], self.position)
@@ -58,8 +58,7 @@ class Question():
             possible_answer.save()
 
     def delete_possible_answers(self) -> None:
-        for possibleAnswer in self.possible_answers:
-            possibleAnswer.delete()
+        PossibleAnswer.delete_by_id_question(self.id_question)
 
     def delete(self) -> None:
         self.delete_possible_answers()
@@ -93,7 +92,8 @@ class Question():
 
         for res in results:
             id, title, text, image, position = res
-            question = Question(id, title, text, image, position, PossibleAnswer.get_by_id_question(id))
+            question = Question(id, title, text, image,
+                                position, PossibleAnswer.get_by_id_question(id))
             questions.append(question)
 
         return questions
@@ -157,13 +157,18 @@ class PossibleAnswer():
                 query, self.text, self.is_correct, self.id_question)
             self.id_possible_answer = result.lastrowid
         else:
-            query = "UPDATE possibleAnswer SET text=?, isCorrect=?, id_question=? WHERE id_possible_answer=?"
+            query = "UPDATE possibleAnswer SET text = ?, isCorrect = ?, id_question = ? WHERE id_possible_answer = ?"
             ConnectionManager().execute(query, self.text, self.is_correct,
                                         self.id_question, self.id_possible_answer)
 
     def delete(self) -> None:
-        query = "DELETE FROM possibleAnswer WHERE id_possible_answer=?"
+        query = "DELETE FROM possibleAnswer WHERE id_possible_answer = ?"
         ConnectionManager().execute(query, self.id_possible_answer)
+
+    @staticmethod
+    def delete_by_id_question(id_question) -> None:
+        query = "DELETE FROM possibleAnswer WHERE id_question = ?"
+        ConnectionManager().execute(query, id_question)
 
     @staticmethod
     def delete_all() -> None:
@@ -387,7 +392,6 @@ class Player():
     def delete_all() -> None:
         query = "DELETE FROM player"
         ConnectionManager().execute(query)
-
 
     @staticmethod
     def get_all_player() -> list['Player']:
