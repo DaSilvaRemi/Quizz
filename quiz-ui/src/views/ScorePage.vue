@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="text-center" >
         <h2>Votre score : {{ playerScore }}</h2>
     </div>
     <ScoreListManager />

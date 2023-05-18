@@ -124,7 +124,7 @@ def update_question_by_id(id_question):
         myQuestion.save()
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
-        return HTTPStatus.INTERNAL_SERVER_ERROR.description, HTTPStatus.INTERNAL_SERVER_ERROR.value
+        return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
 @app.route('/questions/<id_question>', methods=['DELETE'])
 def delete_question_by_id(id_question):

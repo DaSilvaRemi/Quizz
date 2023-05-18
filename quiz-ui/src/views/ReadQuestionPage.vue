@@ -1,7 +1,8 @@
 <template>
     <AdminTabNav />
-    <QuestionCRUForm :question="question" :maxValPosition="maxValPosition" titreForm="Editer une question"
-        submitButtonText="Editer" @reset-question="handleResetQuestionEvent" @submit-question="handleSubmitQuestionEvent" />
+    <QuestionCRUForm :question="question" :maxValPosition="maxValPosition" titreForm="Visualiser une question"
+        submitButtonText="Retour" :displayResetButton="false" :readOnly="true"
+        @submit-question="handleSubmitQuestionEvent" />
 </template>
   
 <script>
@@ -12,7 +13,7 @@ import participationStorageService from "@/services/ParticipationStorageService.
 
 
 export default {
-    name: "EditQuestionPage",
+    name: "ReadQuestionPage",
     components: {
         AdminTabNav,
         QuestionCRUForm
@@ -75,35 +76,9 @@ export default {
         })
     },
     methods: {
-        async handleSubmitQuestionEvent(question) {
-            console.log(question.possibleAnswers);
-
-            quizApiService.putQuestion(
-                this.question.id,
-                question.titre,
-                question.intitule,
-                question.image,
-                question.position,
-                question.possibleAnswers,
-                this.token
-            ).then((response) => {
-                if (response.status !== 204) {
-                    const ERROR = `CODE : ${response.status} putQuestion`
-                    return Promise.reject(ERROR);
-                }
-
-                this.$router.push("/list-questions");
-            }).catch((error) => {
-                console.error(error);
-                if (error.status === 401) {
-                    participationStorageService.saveToken("");
-                    this.$router.push("/login");
-                }
-            })
-        },
-        handleResetQuestionEvent() {
+        handleSubmitQuestionEvent() {
             this.$router.push("/list-questions");
-        }
+        },
     }
 };
 </script>

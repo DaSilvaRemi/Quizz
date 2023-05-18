@@ -7,6 +7,7 @@ import AdminLogin from "../views/AdminLogin.vue";
 import CreateQuestionPage from "../views/CreateQuestionPage.vue";
 import ListQuestionsPage from "../views/ListQuestionsPage.vue";
 import EditQuestionPage from "../views/EditQuestionPage.vue";
+import ReadQuestionPage from "../views/ReadQuestionPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,17 +38,22 @@ const router = createRouter({
       component: AdminLogin,
     },
     {
-      path: "/create-question",
-      name: "createQuestion",
-      component: CreateQuestionPage,
-    },
-    {
       path: "/list-questions",
       name: "listQuestions",
       component: ListQuestionsPage,
     },
     {
-      path: "/edit-questions/:id",
+      path: "/read-question/:id",
+      name: "readQuestion",
+      component: ReadQuestionPage,
+    },
+    {
+      path: "/create-question",
+      name: "createQuestion",
+      component: CreateQuestionPage,
+    },
+    {
+      path: "/edit-question/:id",
       name: "editQuestion",
       component: EditQuestionPage,
     },

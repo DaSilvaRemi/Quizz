@@ -20,8 +20,10 @@
                 </td>
                 <td>{{ question.position }}</td>
                 <td>
-                    <button class="btn mb-4" type="button" @click="handleClickUpdateQuestion(question.id)">
+                    <button class="btn mb-4" type="button" @click="handleClickReadQuestion(question.id)">
                         <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="btn mb-4" type="button" @click="handleClickUpdateQuestion(question.id)">
                         <i class="bi bi-pencil"></i>
                     </button>
                     <button class="btn mb-4" type="button" data-bs-toggle="modal" data-bs-target="#validation-modal">
@@ -57,8 +59,11 @@ export default {
         this.loadAllQuestions()
     },
     methods: {
+        handleClickReadQuestion(index) {
+            this.$router.push(`/read-question/${index}`);
+        },
         handleClickUpdateQuestion(index) {
-            this.$router.push(`/edit-questions/${index}`);
+            this.$router.push(`/edit-question/${index}`);
         },
         async handleClickDeleteQuestion(index) {
             quizApiService.deleteQuestionById(index, this.token)

@@ -30,6 +30,10 @@ export default {
     },
     methods: {
         login() {
+            if(!this.password){
+                return;
+            }
+
             quizApiService
                 .postLogin(this.password)
                 .then(response => {

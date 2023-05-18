@@ -1,8 +1,8 @@
 <template>
     <label class="form-label" for="image">Image</label>
-    <input class="form-control" type="file" name="uploadInput" :disabled="isSaving"
-        accept="image/jpeg, image/png, image/gif" ref="fileInput" @change="handleChangeFile" required />
-    <button class="btn" v-if="file" @click="handleClickRemoveImage"><i class="bi bi-x-circle-fill"></i></button>
+    <input class="form-control" type="file" name="uploadInput" :disabled="isSaving || readOnly"
+        accept="image/jpeg, image/png, image/gif" ref="fileInput" @change="handleChangeFile" required/>
+    <button class="btn" v-if="file && !readOnly" @click="handleClickRemoveImage"><i class="bi bi-x-circle-fill"></i></button>
 </template>
 <script>
 export default {
@@ -12,6 +12,10 @@ export default {
         image: {
             type: String,
             default: ""
+        },
+        readOnly: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -35,14 +39,6 @@ export default {
             },
             false
         );
-
-        if(this.image){
-            this.file = this.base64ImgtoFile(this.image, "monImage");
-            
-            const DATA_TRANSFER = new DataTransfer();
-            DATA_TRANSFER.items.add(this.file);
-            this.$refs.fileInput.files = DATA_TRANSFER.files;
-        }
     },
     beforeUpdate() {
         if (this.image) {

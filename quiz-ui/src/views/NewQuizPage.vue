@@ -26,6 +26,10 @@ export default {
   },
   methods: {
     launchNewQuiz() {
+      if(!this.username){
+        return;
+      }
+
       participationStorageService.clear();
       participationStorageService.savePlayerName(this.username);
       this.$router.push('/questions');

@@ -1,11 +1,7 @@
 <template>
     <AdminTabNav />
-    <QuestionCRUForm 
-        :question="question"
-        titreForm="Créer une question"
-        submitButtonText="Créer"
-        @submit-question="handleSubmitQuestionEvent"
-    />
+    <QuestionCRUForm :question="question" :maxValPosition="maxValPosition" titreForm="Créer une question"
+        submitButtonText="Créer" :displayResetButton="false" @submit-question="handleSubmitQuestionEvent" />
 </template>
 
 <script>
@@ -29,8 +25,8 @@ export default {
                 image: "",
                 possibleAnswers: [],
             },
+            maxValPosition: 1,
             token: "",
-            error: ""
         };
     },
     created() {
@@ -40,6 +36,20 @@ export default {
             this.$router.push("/");
             return;
         }
+
+        quizApiService.getQuizInfo()
+            .then((response) => {
+                if (response.status !== 200) {
+                    const ERROR = `CODE : ${response.status} getQuizInfo`
+                    return Promise.reject(ERROR);
+                }
+
+                this.maxValPosition = response.data.size + 1;
+            }
+            ).catch((error) => {
+                console.log(error);
+            }
+            );
     },
     methods: {
         async handleSubmitQuestionEvent(question) {

@@ -6,7 +6,7 @@
             </div>
             <img v-if="question.image" :src="question.image" class="card-img-top" alt="question.image">
             <div class="card-body">
-                <h5 class="card-title">{{ question.titre }}</h5>
+                <h5 class="card-title">{{ question.title }}</h5>
                 <p class="card-text">{{ question.text }}</p>
                 <ul class="list-group list-group-flush" v-for="(possibleAnswer, index) in question.possibleAnswers"
                     v-bind:key="possibleAnswer.id">
