@@ -17,8 +17,8 @@
                 <RouterLink class="nav-link" to="/new-quiz">New Quiz</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link" to="/login">Login</RouterLink>
-              </li>
+                  <button class="nav-link" @click="handleClickAdmin">Admin</button>
+                </li>
             </ul>
           </div>
         </div>
@@ -29,7 +29,25 @@
 
 <script>
 import { RouterLink } from 'vue-router';
+import participationStorageService from "@/services/ParticipationStorageService.js";
+
 export default {
   name: "AppHeader",
+  data(){
+    return {
+      token: participationStorageService.getToken(),
+    }
+  },
+  methods: {
+    handleClickAdmin() {
+      const TOKEN = participationStorageService.getToken();
+
+        if(!TOKEN){
+            this.$router.push("/login");
+        }else{
+            this.$router.push('/list-question-page');
+        }
+    },
+  }
 };
 </script>

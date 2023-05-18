@@ -1,4 +1,5 @@
 <template>
+    <AdminTabNav />
     <QuestionCRUForm 
         :titre="titre"
         :intitule="intitule"
@@ -14,11 +15,13 @@
 <script>
 import quizApiService from "@/services/QuizApiService.js";
 import participationStorageService from "@/services/ParticipationStorageService.js";
+import AdminTabNav from "@/components/AdminTabNav.vue";
 import QuestionCRUForm from "@/components/QuestionCRUForm.vue";
 
 export default {
     name: "CreateQuestionPage",
     components: {
+        AdminTabNav,
         QuestionCRUForm
     },
     data() {
@@ -51,7 +54,7 @@ export default {
                 this.token
             ).then((response) => {
                 if (response.status !== 200) {
-                    const ERROR = `CODE : ${response.status} getQuestionByPosition`
+                    const ERROR = `CODE : ${response.status} postQuestion`
                     return Promise.reject(ERROR);
                 }
 
