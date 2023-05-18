@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-items-center pt-5 mx-6 px-6">
+  <div class="d-flex align-items-center mx-5 px-5 py-5">
     <table class="table">
       <thead>
         <tr>

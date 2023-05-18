@@ -72,7 +72,7 @@ export default {
         quizApiService.getQuizInfo()
             .then((response) => {
                 if (response.status !== 200) {
-                    const ERROR = `CODE : ${response.status} getQuestionByPosition`
+                    const ERROR = `CODE : ${response.status} getQuizInfo`
                     return Promise.reject(ERROR);
                 }
 
