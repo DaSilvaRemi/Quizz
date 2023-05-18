@@ -63,7 +63,7 @@ export default {
   getAllQuestions() {
     return this.call("get", "questions/all");
   },
-  deleteQuestionById(id) {
-    return this.call("delete", `questions/${id}`);
+  deleteQuestionById(id, token) {
+    return this.call("delete", `questions/${id}`, null, token);
   },
 };
