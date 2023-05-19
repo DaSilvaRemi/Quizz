@@ -1,22 +1,26 @@
 <template>
     <AdminTabNav />
-    <QuestionCRUForm :question="question" :maxValPosition="maxValPosition" titreForm="Visualiser une question"
-        submitButtonText="Retour" :displayResetButton="false" :readOnly="true"
+    <QuestionCRUForm :question="question" :maxValPosition="maxValPosition" :titreForm="'Visualiser la question id : ' + question.id"
+        submitButtonText="Editer" resetButtonText="Supprimer" :readOnly="true" :resetButtonShowModal="true"
         @submit-question="handleSubmitQuestionEvent" />
+    <ValidationModal titre="Avertissement !" body="Voulez vous éditer cette question ?"
+        @modal-click-btn-ok="handleClickDeleteQuestionButton(question.id)" />
 </template>
   
 <script>
 import quizApiService from "@/services/QuizApiService";
+import participationStorageService from "@/services/ParticipationStorageService.js";
 import AdminTabNav from "@/components/AdminTabNav.vue";
 import QuestionCRUForm from "@/components/QuestionCRUForm.vue";
-import participationStorageService from "@/services/ParticipationStorageService.js";
+import ValidationModal from "@/components/ValidationModal.vue";
 
 
 export default {
     name: "ReadQuestionPage",
     components: {
         AdminTabNav,
-        QuestionCRUForm
+        QuestionCRUForm,
+        ValidationModal
     },
     data() {
         return {
@@ -77,8 +81,26 @@ export default {
     },
     methods: {
         handleSubmitQuestionEvent() {
-            this.$router.push("/list-questions");
+            this.$router.push(`/edit-question/${this.question.id}`);
         },
+        handleClickDeleteQuestionButton(id){
+            quizApiService.deleteQuestionById(id, this.token)
+                .then(response => {
+                    if (response.status !== 204) {
+                        const ERROR = `CODE : ${response.status} postQuestion`
+                        return Promise.reject(ERROR);
+                    }
+
+                    this.$router.push("/list-questions");
+                }
+                ).catch((error) => {
+                    console.error(error);
+                    if (error.status === 401) {
+                        participationStorageService.saveToken("");
+                        this.$router.push("/login");
+                    }
+                });
+        }
     }
 };
 </script>

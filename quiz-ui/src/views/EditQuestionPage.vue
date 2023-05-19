@@ -1,21 +1,26 @@
 <template>
     <AdminTabNav />
-    <QuestionCRUForm :question="question" :maxValPosition="maxValPosition" titreForm="Editer une question"
-        submitButtonText="Editer" @reset-question="handleResetQuestionEvent" @submit-question="handleSubmitQuestionEvent" />
+    <QuestionCRUForm :question="question" :maxValPosition="maxValPosition"
+        :titreForm="'Editer la question id : ' + question.id" submitButtonText="Editer"
+        @submit-question="handleSubmitQuestionEvent" @reset-question="handleResetQuestionEvent" />
+    <ValidationModal titre="Avertissement !" body="Voulez vous éditer cette question ?"
+        @modal-click-btn-ok="handleClickEditQuestionButton" />
 </template>
   
 <script>
 import quizApiService from "@/services/QuizApiService";
+import participationStorageService from "@/services/ParticipationStorageService.js";
 import AdminTabNav from "@/components/AdminTabNav.vue";
 import QuestionCRUForm from "@/components/QuestionCRUForm.vue";
-import participationStorageService from "@/services/ParticipationStorageService.js";
+import ValidationModal from "@/components/ValidationModal.vue";
 
 
 export default {
     name: "EditQuestionPage",
     components: {
         AdminTabNav,
-        QuestionCRUForm
+        QuestionCRUForm,
+        ValidationModal,
     },
     data() {
         return {
@@ -75,16 +80,19 @@ export default {
         })
     },
     methods: {
-        async handleSubmitQuestionEvent(question) {
-            console.log(question.possibleAnswers);
-
+        handleSubmitQuestionEvent(question) {
+            this.question = question;
+            const VALIDATION_MODAL = new bootstrap.Modal(document.getElementById('validation-modal'));
+            VALIDATION_MODAL.show();
+        },
+        async handleClickEditQuestionButton() {
             quizApiService.putQuestion(
                 this.question.id,
-                question.titre,
-                question.intitule,
-                question.image,
-                question.position,
-                question.possibleAnswers,
+                this.question.titre,
+                this.question.intitule,
+                this.question.image,
+                this.question.position,
+                this.question.possibleAnswers,
                 this.token
             ).then((response) => {
                 if (response.status !== 204) {

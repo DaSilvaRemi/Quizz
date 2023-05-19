@@ -5,7 +5,7 @@
             <div class="form-outline mb-4">
                 <label class="form-label" for="titre">Titre</label>
                 <input type="text" id="titre" name="titre" class="form-control" placeholder="Mon titre"
-                    v-model="question.titre" required :disabled="readOnly"/>
+                    v-model="question.titre" required :disabled="readOnly" />
             </div>
 
             <div class="form-outline mb-4">
@@ -17,13 +17,13 @@
             <div class="form-outline mb-4">
                 <label class="form-label" for="position">Position</label>
                 <input type="number" id="position" name="position" class="form-control" min="1" :max="maxValPosition"
-                    v-model="question.position" :disabled="readOnly"/>
+                    v-model="question.position" :disabled="readOnly" />
             </div>
 
             <img class="img-fluid" :src="question.image" :alt="question.image" :disabled="readOnly">
 
             <div class="form-outline mb-4">
-                <ImageUpload @file-change="handleChangeImage" :image="question.image" :readOnly="readOnly"/>
+                <ImageUpload @file-change="handleChangeImage" :image="question.image" :readOnly="readOnly" />
             </div>
 
             <table class="table">
@@ -38,7 +38,7 @@
                     <tr>
                         <td>
                             <input type="text" id="possibleAnswerTexte" name="possibleAnswerTexte" class="form-control"
-                                placeholder="Un texte" v-model="possibleAnswer.text" required :disabled="readOnly"/>
+                                placeholder="Un texte" v-model="possibleAnswer.text" required :disabled="readOnly" />
                         </td>
                         <td>
                             <input class="form-check-input me-2" type="checkbox" id="possibleAnswerisCorrect"
@@ -56,10 +56,13 @@
             </table>
             <p v-if="error" class="alert alert-danger">{{ error }}</p>
             <div class="text-center">
-                <button class="btn btn-primary btn-block mx-4 mb-4" type="submit" @click="handleClickSubmitQuestion">{{
-                    submitButtonText }}</button>
+                <button class="btn btn-primary btn-block mx-4 mb-4" type="submit"
+                    :data-bs-toggle="submitButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal"
+                    @click="handleClickSubmitQuestion">{{
+                        submitButtonText }}</button>
                 <button v-if="displayResetButton" class="btn btn-primary btn-block mx- mb-4" type="reset"
-                    @click="handleResetQuestion">Annuler</button>
+                    :data-bs-toggle="resetButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal"
+                    @click="handleResetQuestion">{{ resetButtonText }}</button>
             </div>
         </form>
     </div>
@@ -78,6 +81,10 @@ export default {
         maxValPosition: Number,
         titreForm: String,
         submitButtonText: String,
+        resetButtonText: {
+            type: String,
+            default: "Annuler"
+        },
         displayResetButton: {
             type: Boolean,
             default: true,
@@ -86,6 +93,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        submitButtonShowModal: {
+            type: Boolean,
+            default: false,
+        },
+        resetButtonShowModal: {
+            type: Boolean,
+            default: false,
+        }
     },
     data() {
         return {
