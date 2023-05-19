@@ -1,29 +1,29 @@
 <template>
     <div class="d-flex flex-column align-items-center pt-5">
-        <form @submit.prevent="submit">
+        <form @submit.prevent="handleClickSubmitQuestion">
             <h2 class="text-center">{{ titreForm }}</h2>
             <div class="form-outline mb-4">
                 <label class="form-label" for="titre">Titre</label>
                 <input type="text" id="titre" name="titre" class="form-control" placeholder="Mon titre"
-                    v-model="question.titre" required :disabled="readOnly" />
+                    v-model="questionCopy.titre" required :disabled="readOnly" />
             </div>
 
             <div class="form-outline mb-4">
                 <label class="form-label" for="intitule">Intitulé</label>
                 <textarea id="intitule" name="intitule" class="form-control" placeholder="Mon intitulé"
-                    v-model="question.intitule" required :disabled="readOnly"></textarea>
+                    v-model="questionCopy.intitule" required :disabled="readOnly"></textarea>
             </div>
 
             <div class="form-outline mb-4">
                 <label class="form-label" for="position">Position</label>
                 <input type="number" id="position" name="position" class="form-control" min="1" :max="maxValPosition"
-                    v-model="question.position" :disabled="readOnly" />
+                    v-model="questionCopy.position" :disabled="readOnly" />
             </div>
 
-            <img class="img-fluid" :src="question.image" :alt="question.image" :disabled="readOnly">
+            <img class="img-fluid" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly">
 
             <div class="form-outline mb-4">
-                <ImageUpload @file-change="handleChangeImage" :image="question.image" :readOnly="readOnly" />
+                <ImageUpload @file-change="handleChangeImage" :image="questionCopy.image" :readOnly="readOnly" />
             </div>
 
             <table class="table">
@@ -34,7 +34,7 @@
                         <th scope="col" v-if="!readOnly">Supprimer</th>
                     </tr>
                 </thead>
-                <tbody v-for="(possibleAnswer, index) in question.possibleAnswers" v-bind:key="index">
+                <tbody v-for="(possibleAnswer, index) in questionCopy.possibleAnswers" v-bind:key="index">
                     <tr>
                         <td>
                             <input type="text" id="possibleAnswerTexte" name="possibleAnswerTexte" class="form-control"
@@ -56,9 +56,7 @@
             </table>
             <p v-if="error" class="alert alert-danger">{{ error }}</p>
             <div class="text-center">
-                <button class="btn btn-primary btn-block mx-4 mb-4" type="submit"
-                    :data-bs-toggle="submitButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal"
-                    @click="handleClickSubmitQuestion">{{
+                <button class="btn btn-primary btn-block mx-4 mb-4" type="submit" :data-bs-toggle="submitButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal">{{
                         submitButtonText }}</button>
                 <button v-if="displayResetButton" class="btn btn-primary btn-block mx- mb-4" type="reset"
                     :data-bs-toggle="resetButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal"
@@ -104,23 +102,32 @@ export default {
     },
     data() {
         return {
-            questionCopy: { ...this.question },
+            questionCopy: {...this.question, possibleAnswers: [...this.question.possibleAnswers] },
             error: ""
         };
     },
+    watch: { 
+        question: {
+            handler(newVal, oldVal) {
+                this.questionCopy = {...newVal, possibleAnswers: [...newVal.possibleAnswers] };
+            },
+            deep: true,
+            immediate: true,
+        },
+    },
     methods: {
         handleChangeImage(fileDataUrl) {
-            this.question.image = fileDataUrl;
+            this.questionCopy.image = fileDataUrl;
         },
         handleClickAddPossibleAnswer() {
-            this.question.possibleAnswers.push({ text: '', isCorrect: false });
+            this.questionCopy.possibleAnswers.push({ text: '', isCorrect: false });
         },
         handleClickDeletePossibleAnswer(index) {
-            this.question.possibleAnswers.splice(index, 1);
+            this.questionCopy.possibleAnswers.splice(index, 1);
         },
         handleChangePossibleAnswerIsCorrect(index) {
-            for (let i = 0; i < this.question.possibleAnswers.length; i++) {
-                const POSSIBLE_ANSWER = this.question.possibleAnswers[i];
+            for (let i = 0; i < this.questionCopy.possibleAnswers.length; i++) {
+                const POSSIBLE_ANSWER = this.questionCopy.possibleAnswers[i];
 
                 if (i !== index) {
                     POSSIBLE_ANSWER.isCorrect = false;
@@ -128,13 +135,13 @@ export default {
             }
         },
         handleClickSubmitQuestion() {
-            if (!this.question.titre || !this.question.intitule || this.question.position < 1 || this.question.position > this.maxValPosition || !this.question.image) {
+            if (!this.questionCopy.titre || !this.questionCopy.intitule || this.questionCopy.position < 1 || this.questionCopy.position > this.maxValPosition || !this.questionCopy.image) {
                 return;
             }
 
             let count = 0;
             let possibelAnswersIsValid = true;
-            this.question.possibleAnswers.forEach((possibleAnswer) => {
+            this.questionCopy.possibleAnswers.forEach((possibleAnswer) => {
                 if (!possibleAnswer.text) {
                     possibelAnswersIsValid = false;
                     return;
@@ -154,10 +161,10 @@ export default {
                 return;
             }
 
-            this.$emit("submit-question", this.question);
+            this.$emit("submit-question", this.questionCopy);
         },
         handleResetQuestion() {
-            this.$emit("reset-question", this.question);
+            this.$emit("reset-question", this.questionCopy);
         },
     }
 }

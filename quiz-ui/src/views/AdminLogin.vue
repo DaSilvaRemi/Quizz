@@ -1,13 +1,13 @@
 <template>
     <div class="d-flex flex-column align-items-center pt-5">
-        <form class="w-25" @submit.prevent="submit">
+        <form class="w-25" @submit.prevent="login">
             <h2 class="text-center mb-4">Se connecter</h2>
             <div class="form-outline mb-4">
               <input class="form-control" type="password" id="mot-de-passe"  placeholder="Mot de passe..." required v-model="password" />
             </div>
 
             <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-block mb-5 w-100" @click="login">Connexion</button>
+                <button type="submit" class="btn btn-primary btn-block mb-5 w-100">Connexion</button>
             </div>
         </form>
 

@@ -3,7 +3,7 @@
     <QuestionCRUForm :question="question" :maxValPosition="maxValPosition" :titreForm="'Visualiser la question id : ' + question.id"
         submitButtonText="Editer" resetButtonText="Supprimer" :readOnly="true" :resetButtonShowModal="true"
         @submit-question="handleSubmitQuestionEvent" />
-    <ValidationModal titre="Avertissement !" body="Voulez vous éditer cette question ?"
+    <ValidationModal titre="Avertissement !" body="Voulez vous supprimer cette question ?"
         @modal-click-btn-ok="handleClickDeleteQuestionButton(question.id)" />
 </template>
   
