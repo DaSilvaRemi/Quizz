@@ -574,70 +574,6 @@
 					"response": []
 				},
 				{
-					"name": "Get all question",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Request respond ok\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Request respond json\", function () {\r",
-									"    pm.response.to.not.be.error;\r",
-									"    pm.response.to.have.jsonBody();\r",
-									"    pm.response.to.not.have.jsonBody(\"error\");\r",
-									"    pm.response.to.have.jsonBody(\"questions\");\r",
-									"});\r",
-									"\r",
-									"Questions = pm.response.json();\r",
-									"FirstQuestion = Questions.questions[0];\r",
-									"\r",
-									"pm.test(\"Verify the first question is henry IV question\", function () {\r",
-									"    pm.expect(FirstQuestion.id).to.not.be.null;\r",
-									"    pm.expect(FirstQuestion.title).to.equal(\"Dummy Question\");\r",
-									"    pm.expect(FirstQuestion.text).to.equal(\"Quelle est la couleur du cheval blanc d'Henry IV ?\");\r",
-									"    pm.expect(FirstQuestion.position).to.equal(1);\r",
-									"    pm.expect(FirstQuestion.image).to.equal(\"falseb64imagecontent\");\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Possible questions are the proper ones\", function () {\r",
-									"    pm.expect(FirstQuestion.possibleAnswers.length).to.equal(4);\r",
-									"    pm.expect(FirstQuestion.possibleAnswers[0].text).to.equal(\"Noir\");\r",
-									"    pm.expect(FirstQuestion.possibleAnswers[0].isCorrect).to.equal(false);\r",
-									"    pm.expect(FirstQuestion.possibleAnswers[1].text).to.equal(\"Gris\");\r",
-									"    pm.expect(FirstQuestion.possibleAnswers[1].isCorrect).to.equal(false);\r",
-									"    pm.expect(FirstQuestion.possibleAnswers[2].text).to.equal(\"Blanc\");\r",
-									"    pm.expect(FirstQuestion.possibleAnswers[2].isCorrect).to.equal(true);\r",
-									"    pm.expect(FirstQuestion.possibleAnswers[3].text).to.equal(\"La réponse D\");\r",
-									"    pm.expect(FirstQuestion.possibleAnswers[3].isCorrect).to.equal(false);\r",
-									"});\r",
-									"\r",
-									"\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/questions/all",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"questions",
-								"all"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Add 2nd question",
 					"event": [
 						{
@@ -4330,6 +4266,229 @@
 							],
 							"path": [
 								"quiz-info"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "6 - Custom API Tests",
+			"item": [
+				{
+					"name": "Login good password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Good Password \", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"access token is provided\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"token\")\r",
+									"});\r",
+									"\r",
+									"//A activer une fois l'authentification implémentée\r",
+									"pm.environment.set(\"access_token\",pm.response.json().token);\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"flask2023\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all questions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/questions/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"questions",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Question id is returned\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"    pm.collectionVariables.set(\"questionId\", jsonData.id);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Quelle est la couleur du cheval blanc d'Henry IV ?\",\r\n    \"title\": \"Dummy Question\",\r\n    \"image\": \"falseb64imagecontent\",\r\n    \"position\": 1,\r\n    \"possibleAnswers\": [\r\n        {\r\n            \"text\": \"Noir\",\r\n            \"isCorrect\": false \r\n        },\r\n        {\r\n            \"text\": \"Gris\",\r\n            \"isCorrect\": false\r\n        },\r\n        {\r\n            \"text\": \"Blanc\",\r\n            \"isCorrect\": true\r\n        },\r\n        {\r\n            \"text\": \"La réponse D\",\r\n            \"isCorrect\": false\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/questions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"questions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all question",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Request respond ok\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request respond json\", function () {\r",
+									"    pm.response.to.not.be.error;\r",
+									"    pm.response.to.have.jsonBody();\r",
+									"    pm.response.to.not.have.jsonBody(\"error\");\r",
+									"    pm.response.to.have.jsonBody(\"questions\");\r",
+									"});\r",
+									"\r",
+									"Questions = pm.response.json();\r",
+									"FirstQuestion = Questions.questions[0];\r",
+									"\r",
+									"pm.test(\"Verify the first question is henry IV question\", function () {\r",
+									"    pm.expect(FirstQuestion.id).to.not.be.null;\r",
+									"    pm.expect(FirstQuestion.title).to.equal(\"Dummy Question\");\r",
+									"    pm.expect(FirstQuestion.text).to.equal(\"Quelle est la couleur du cheval blanc d'Henry IV ?\");\r",
+									"    pm.expect(FirstQuestion.position).to.equal(1);\r",
+									"    pm.expect(FirstQuestion.image).to.equal(\"falseb64imagecontent\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Possible questions are the proper ones\", function () {\r",
+									"    pm.expect(FirstQuestion.possibleAnswers.length).to.equal(4);\r",
+									"    pm.expect(FirstQuestion.possibleAnswers[0].text).to.equal(\"Noir\");\r",
+									"    pm.expect(FirstQuestion.possibleAnswers[0].isCorrect).to.equal(false);\r",
+									"    pm.expect(FirstQuestion.possibleAnswers[1].text).to.equal(\"Gris\");\r",
+									"    pm.expect(FirstQuestion.possibleAnswers[1].isCorrect).to.equal(false);\r",
+									"    pm.expect(FirstQuestion.possibleAnswers[2].text).to.equal(\"Blanc\");\r",
+									"    pm.expect(FirstQuestion.possibleAnswers[2].isCorrect).to.equal(true);\r",
+									"    pm.expect(FirstQuestion.possibleAnswers[3].text).to.equal(\"La réponse D\");\r",
+									"    pm.expect(FirstQuestion.possibleAnswers[3].isCorrect).to.equal(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/questions/all",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"questions",
+								"all"
 							]
 						}
 					},
