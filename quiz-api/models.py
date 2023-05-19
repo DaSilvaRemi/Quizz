@@ -84,7 +84,7 @@ class Question():
     def get_all_questions() -> list['Question']:
         questions = []
 
-        query = "SELECT * FROM question;"
+        query = "SELECT * FROM question ORDER BY question.position;"
         results = ConnectionManager().execute(query).fetchall()
 
         if results is None:

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-center">Home page</h1>
+  <h1 class="text-center">Accueil</h1>
   <ScoreListManager />
   <div class="text-center">
     <RouterLink to="/new-quiz" class="btn btn-primary">Démarrer le quiz !</RouterLink>
