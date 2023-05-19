@@ -1,18 +1,19 @@
 <template>
-    <div class="d-flex flex-column align-items-center pt-5">
-        <div class="card" style="width: 18rem;">
-            <div class="card-header">
-                <h6>Question n°{{ question.position }}</h6>
-            </div>
-            <img v-if="question.image" :src="question.image" class="card-img-top" alt="question.image">
-            <div class="card-body">
-                <h5 class="card-title">{{ question.title }}</h5>
-                <p class="card-text">{{ question.text }}</p>
-                <ul class="list-group list-group-flush" v-for="(possibleAnswer, index) in question.possibleAnswers"
-                    v-bind:key="possibleAnswer.id">
-                    <button class="list-group-item list-group-item-action" @click="selectAnswer(index)"> {{ possibleAnswer.text }}
+    <div class="d-flex flex-column align-items-center pt-3">
+        <div class="d-flex flex-row">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ question.title }}</h5>
+                    <p class="card-text">{{ question.text }}</p>
+                </div>
+                <ul class="list-group list-group-flush" v-for="(possibleAnswer, index) in question.possibleAnswers" v-bind:key="possibleAnswer.id">
+                    <button class="btn btn-outline-dark m-1" @click="selectAnswer(index)">
+                        {{ possibleAnswer.text }}
                     </button>
                 </ul>
+            </div>
+            <div style="margin-left: 10px;">
+                <img v-if="question.image" :src="question.image" class="card-img-top" style=" max-height:200px" alt="<Image introuvable...>">
             </div>
         </div>
     </div>
