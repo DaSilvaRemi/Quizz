@@ -29,6 +29,7 @@
  *   Clears the participation storage service to reset the score.
  * 
  */
+import { RouterLink } from 'vue-router';
 import ScoreListManager from "@/components/ScoreListManager.vue";
 import participationStorageService from "@/services/ParticipationStorageService.js";
 
@@ -44,7 +45,7 @@ export default {
     },
     created() {
         if(!participationStorageService.getParticipationScore()){
-            this.$router.push('/home');
+            this.$router.push('/');
         }
 
         this.playerScore = participationStorageService.getParticipationScore();

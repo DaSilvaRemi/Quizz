@@ -27,6 +27,7 @@
  * Methods:
  *   - created(): Lifecycle hook called when the component is created. Retrieves the authentication token and redirects to the home page if the token is missing.
  */
+ import { RouterLink } from 'vue-router';
 import ListQuestionsDisplay from "@/components/ListQuestionsDisplay.vue"
 import AdminTabNav from "@/components/AdminTabNav.vue";
 import participationStorageService from "@/services/ParticipationStorageService.js";

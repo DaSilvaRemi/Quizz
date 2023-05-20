@@ -16,6 +16,7 @@
  *
  * No data or methods defined in this component.
  */
+ import { RouterLink } from 'vue-router';
 import ScoreListManager from "@/components/ScoreListManager.vue";
 
 export default {
