@@ -20,7 +20,8 @@
                     v-model="questionCopy.position" :disabled="readOnly" />
             </div>
 
-            <img class="img-fluid" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly">
+            <img class="img-fluid" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly"
+                style="max-width:400px">
 
             <div class="form-outline mb-4">
                 <ImageUpload @file-change="handleChangeImage" :image="questionCopy.image" :readOnly="readOnly" />
