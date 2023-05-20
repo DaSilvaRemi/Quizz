@@ -1,6 +1,5 @@
 <template>
-    <table class="table">
-        <thead>
+    <div class="mx-5 mt-4 mb-2">
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Titre</th>
@@ -36,6 +35,7 @@
                 :id="'validation-modal-' + question.id" @modal-click-btn-ok="handleClickDeleteQuestion(question.id)" />
         </tbody>
     </table>
+    </div>
 </template>
 
 <script>
