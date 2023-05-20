@@ -1,7 +1,7 @@
 <template>
   <h1 class="text-center">Accueil</h1>
   <ScoreListManager />
-  <div class="text-center">
+  <div class="text-center mb-4">
     <RouterLink to="/new-quiz" class="btn btn-primary">Démarrer le quiz !</RouterLink>
   </div>
 </template>

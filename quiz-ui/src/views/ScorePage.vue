@@ -3,7 +3,7 @@
         <h2>Votre score : {{ playerScore }}</h2>
     </div>
     <ScoreListManager />
-    <div class="text-center">
+    <div class="text-center mb-4">
         <RouterLink to="/" class="btn btn-primary">Retour à l'accueil</RouterLink>
     </div>
 </template>
