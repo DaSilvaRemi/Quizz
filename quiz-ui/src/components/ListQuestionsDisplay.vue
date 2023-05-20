@@ -1,5 +1,6 @@
 <template>
     <div class="mx-5 mt-4 mb-2">
+    <table class="table table-bordered">
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Titre</th>
