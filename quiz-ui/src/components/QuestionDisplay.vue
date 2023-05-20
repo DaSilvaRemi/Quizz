@@ -6,14 +6,16 @@
                     <h5 class="card-title">{{ question.title }}</h5>
                     <p class="card-text">{{ question.text }}</p>
                 </div>
-                <ul class="list-group list-group-flush" v-for="(possibleAnswer, index) in question.possibleAnswers" v-bind:key="possibleAnswer.id">
+                <ul class="list-group list-group-flush" v-for="(possibleAnswer, index) in question.possibleAnswers"
+                    v-bind:key="possibleAnswer.id">
                     <button class="btn btn-outline-dark m-1" @click="selectAnswer(index)">
                         {{ possibleAnswer.text }}
                     </button>
                 </ul>
             </div>
             <div style="margin-left: 10px;">
-                <img v-if="question.image" :src="question.image" class="card-img-top" style=" max-height:200px" alt="<Image introuvable...>">
+                <img v-if="question.image" :src="question.image" class="card-img-top" style="max-width:200px"
+                    alt="<Image introuvable...>">
             </div>
         </div>
     </div>

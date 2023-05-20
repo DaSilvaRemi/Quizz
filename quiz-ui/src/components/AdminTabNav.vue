@@ -1,15 +1,23 @@
 <template>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <RouterLink v-if="routeName === 'listQuestions'" class="nav-link active"  to="/list-questions">List Questions</RouterLink>
-            <RouterLink v-else class="nav-link" to="/list-questions">List Questions</RouterLink>
+            <RouterLink v-if="routeName === 'listQuestions'" class="nav-link active" to="/list-questions">
+                Toutes les questions
+            </RouterLink>
+            <RouterLink v-else class="nav-link" to="/list-questions">
+                Toutes les questions
+            </RouterLink>
         </li>
         <li class="nav-item">
-            <RouterLink v-if="routeName === 'createQuestion'" class="nav-link active"  to="/create-question">Create Question</RouterLink>
-            <RouterLink v-else class="nav-link" to="/create-question">Create Question</RouterLink>
+            <RouterLink v-if="routeName === 'createQuestion'" class="nav-link active" to="/create-question">
+                Nouvelle question
+            </RouterLink>
+            <RouterLink v-else class="nav-link" to="/create-question">
+                Nouvelle question
+            </RouterLink>
         </li>
         <li class="nav-item">
-            <button class="nav-link" @click="handleClickLogout">Logout</button>
+            <button class="nav-link" @click="handleClickLogout">Déconnexion</button>
         </li>
     </ul>
 </template>

@@ -4,7 +4,7 @@
     </div>
     <ScoreListManager />
     <div class="text-center">
-        <RouterLink to="/" class="btn btn-primary">Retour à la HomePage</RouterLink>
+        <RouterLink to="/" class="btn btn-primary">Retour à l'accueil</RouterLink>
     </div>
 </template>
 

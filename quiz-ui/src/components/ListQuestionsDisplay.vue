@@ -20,10 +20,10 @@
                 </td>
                 <td>{{ question.position }}</td>
                 <td>
-                    <button class="btn mb-4" type="button" @click="handleClickReadQuestion(question.id)">
+                    <button class="btn m-1" type="button" @click="handleClickReadQuestion(question.id)">
                         <i class="bi bi-eye"></i>
                     </button>
-                    <button class="btn mb-4" type="button" @click="handleClickUpdateQuestion(question.id)">
+                    <button class="btn m-1" type="button" @click="handleClickUpdateQuestion(question.id)">
                         <i class="bi bi-pencil"></i>
                     </button>
                     <button class="btn mb-4" type="button" data-bs-toggle="modal"
