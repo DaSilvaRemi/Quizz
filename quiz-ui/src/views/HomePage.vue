@@ -1,7 +1,11 @@
 <template>
-  <h1 class="text-center">Accueil</h1>
+  <h1 class="text-center my-4">
+    Accueil
+  </h1>
+
   <ScoreListManager />
-  <div class="text-center">
+
+  <div class="text-center my-3">
     <RouterLink to="/new-quiz" class="btn btn-primary">Démarrer le quiz !</RouterLink>
   </div>
 </template>
@@ -16,7 +20,7 @@
  *
  * No data or methods defined in this component.
  */
- import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import ScoreListManager from "@/components/ScoreListManager.vue";
 
 export default {

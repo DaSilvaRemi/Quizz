@@ -1,7 +1,7 @@
 <template>
-  <div class="d-flex align-items-center mx-5 px-5 py-5">
-    <table class="table">
-      <thead>
+  <div class="d-flex align-items-center mx-5">
+    <table class="table table-bordered">
+      <thead style="background-color: lightskyblue;">
         <tr>
           <th scope="col">Classement</th>
           <th scope="col">Nom du joueur</th>
@@ -9,8 +9,8 @@
         </tr>
       </thead>
       <tbody v-for="(scoreEntry, index) in registeredScores" v-bind:key="index">
-        <tr>
-          <th scope="row">{{ index + 1 }}</th>
+        <tr :class="{ 'bg-light': index % 2 }">
+          <th scope="row">#{{ index + 1 }}</th>
           <td>{{ scoreEntry.playerName }}</td>
           <td>{{ scoreEntry.score }}</td>
         </tr>

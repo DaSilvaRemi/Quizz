@@ -1,12 +1,12 @@
 <template>
     <AdminTabNav />
-    <div class="text-center">
-        <h2>Vos questions</h2>
-    </div>
+    <h1 class="text-center my-4">
+        Vos questions
+    </h1>
 
     <ListQuestionsDisplay :token="token" />
 
-    <div class="text-center">
+    <div class="text-center my-3">
         <RouterLink to="/create-question" class="btn btn-primary">Créer question</RouterLink>
     </div>
 </template>
@@ -27,7 +27,7 @@
  * Methods:
  *   - created(): Lifecycle hook called when the component is created. Retrieves the authentication token and redirects to the home page if the token is missing.
  */
- import { RouterLink } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import ListQuestionsDisplay from "@/components/ListQuestionsDisplay.vue"
 import AdminTabNav from "@/components/AdminTabNav.vue";
 import participationStorageService from "@/services/ParticipationStorageService.js";
@@ -38,7 +38,7 @@ export default {
         ListQuestionsDisplay,
         AdminTabNav
     },
-    data(){
+    data() {
         return {
             token: ""
         }

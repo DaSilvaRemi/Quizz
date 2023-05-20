@@ -1,7 +1,7 @@
 <template>
-    <div class="d-flex flex-column align-items-center pt-5">
+    <div class="d-flex flex-column align-items-center my-4">
         <form @submit.prevent="handleClickSubmitQuestion">
-            <h2 class="text-center">{{ titreForm }}</h2>
+            <h1 class="text-center mb-3">{{ titreForm }}</h1>
             <div class="form-outline mb-4">
                 <label class="form-label" for="titre">Titre</label>
                 <input type="text" id="titre" name="titre" class="form-control" placeholder="Mon titre"
@@ -20,7 +20,8 @@
                     v-model="questionCopy.position" :disabled="readOnly" />
             </div>
 
-            <img class="img-fluid" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly">
+            <img class="img-fluid" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly"
+                style="max-width:400px">
 
             <div class="form-outline mb-4">
                 <ImageUpload @file-change="handleChangeImage" :image="questionCopy.image" :readOnly="readOnly" />
@@ -54,9 +55,11 @@
                 <button v-if="!readOnly" class="btn mb-4" type="button" @click="handleClickAddPossibleAnswer"><i
                         class="bi bi-plus-circle-fill"></i></button>
             </table>
+
             <p v-if="error" class="alert alert-danger">{{ error }}</p>
-            <div class="text-center">
-                <button class="btn btn-primary btn-block mx-4 mb-4" type="submit" :data-bs-toggle="submitButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal">{{
+            <div class="text-center my-3">
+                <button class="btn btn-primary btn-block mx-4 mb-4" type="submit"
+                    :data-bs-toggle="submitButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal">{{
                         submitButtonText }}</button>
                 <button v-if="displayResetButton" class="btn btn-primary btn-block mx- mb-4" type="reset"
                     :data-bs-toggle="resetButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal"
@@ -146,14 +149,14 @@ export default {
     },
     data() {
         return {
-            questionCopy: {...this.question, possibleAnswers: [...this.question.possibleAnswers] },
+            questionCopy: { ...this.question, possibleAnswers: [...this.question.possibleAnswers] },
             error: ""
         };
     },
-    watch: { 
+    watch: {
         question: {
             handler(newVal, oldVal) {
-                this.questionCopy = {...newVal, possibleAnswers: [...newVal.possibleAnswers] };
+                this.questionCopy = { ...newVal, possibleAnswers: [...newVal.possibleAnswers] };
             },
             deep: true,
             immediate: true,
@@ -180,11 +183,11 @@ export default {
         handleClickDeletePossibleAnswer(index) {
             this.questionCopy.possibleAnswers.splice(index, 1);
         },
-         /**
-         * Handles the change event of a possible answer's isCorrect property.
-         * Ensures only one possible answer can be marked as correct.
-         * @param {Number} index - The index of the selected possible answer.
-         */
+        /**
+        * Handles the change event of a possible answer's isCorrect property.
+        * Ensures only one possible answer can be marked as correct.
+        * @param {Number} index - The index of the selected possible answer.
+        */
         handleChangePossibleAnswerIsCorrect(index) {
             for (let i = 0; i < this.questionCopy.possibleAnswers.length; i++) {
                 const POSSIBLE_ANSWER = this.questionCopy.possibleAnswers[i];
@@ -194,10 +197,10 @@ export default {
                 }
             }
         },
-         /**
-         * Handles the click event to submit the question.
-         * Emits the "submit-question" event with the questionCopy as the payload.
-         */
+        /**
+        * Handles the click event to submit the question.
+        * Emits the "submit-question" event with the questionCopy as the payload.
+        */
         handleClickSubmitQuestion() {
             if (!this.questionCopy.titre || !this.questionCopy.intitule || this.questionCopy.position < 1 || this.questionCopy.position > this.maxValPosition || !this.questionCopy.image) {
                 return;

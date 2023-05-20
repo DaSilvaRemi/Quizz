@@ -1,41 +1,43 @@
 <template>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Titre</th>
-                <th scope="col">Question</th>
-                <th scope="col" style="width: 10%">Image</th>
-                <th scope="col">Position</th>
-                <th scope="col" style="width: 20%">Actions</th>
-            </tr>
-        </thead>
-        <tbody v-for="(question, index) in allQuestions" v-bind:key="index">
-            <tr>
-                <td>{{ question.id }}</td>
-                <td>{{ question.title }}</td>
-                <td>{{ question.text }}</td>
-                <td>
-                    <img class=" img-fluid" :src=question.image :alt="question.image" />
-                </td>
-                <td>{{ question.position }}</td>
-                <td>
-                    <button class="btn m-1" type="button" @click="handleClickReadQuestion(question.id)">
-                        <i class="bi bi-eye"></i>
-                    </button>
-                    <button class="btn m-1" type="button" @click="handleClickUpdateQuestion(question.id)">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                    <button class="btn mb-1" type="button" data-bs-toggle="modal"
-                        :data-bs-target="'#validation-modal-' + question.id">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            <ValidationModal titre="Avertissement !" :body="'Voulez vous supprimer la question  ' + question.id + ' ?'"
-                :id="'validation-modal-' + question.id" @modal-click-btn-ok="handleClickDeleteQuestion(question.id)" />
-        </tbody>
-    </table>
+    <div class="mx-5">
+        <table class="table table-bordered">
+            <thead style="background-color: lightskyblue;">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Titre</th>
+                    <th scope="col">Question</th>
+                    <th scope="col" style="width: 10%">Image</th>
+                    <th scope="col">Position</th>
+                    <th scope="col" style="width: 20%">Actions</th>
+                </tr>
+            </thead>
+            <tbody v-for="(question, index) in allQuestions" v-bind:key="index">
+                <tr :class="{ 'bg-light': index % 2 }">
+                    <td>{{ question.id }}</td>
+                    <td>{{ question.title }}</td>
+                    <td>{{ question.text }}</td>
+                    <td>
+                        <img class=" img-fluid" :src=question.image :alt="question.image" />
+                    </td>
+                    <td>{{ question.position }}</td>
+                    <td>
+                        <button class="btn m-1" type="button" @click="handleClickReadQuestion(question.id)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <button class="btn m-1" type="button" @click="handleClickUpdateQuestion(question.id)">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn mb-1" type="button" data-bs-toggle="modal"
+                            :data-bs-target="'#validation-modal-' + question.id">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <ValidationModal titre="Avertissement !" :body="'Voulez vous supprimer la question  ' + question.id + ' ?'"
+                    :id="'validation-modal-' + question.id" @modal-click-btn-ok="handleClickDeleteQuestion(question.id)" />
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
