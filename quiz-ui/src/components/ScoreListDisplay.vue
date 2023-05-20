@@ -10,7 +10,7 @@
       </thead>
       <tbody v-for="(scoreEntry, index) in registeredScores" v-bind:key="index">
         <tr>
-          <th scope="row">{{ index + 1 }}</th>
+          <th scope="row">#{{ index + 1 }}</th>
           <td>{{ scoreEntry.playerName }}</td>
           <td>{{ scoreEntry.score }}</td>
         </tr>
