@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex align-items-center mx-5 mt-4 mb-2">
+  <div class="d-flex align-items-center mx-5">
     <table class="table table-bordered">
       <thead style="background-color: lightskyblue;">
         <tr>

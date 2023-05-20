@@ -1,9 +1,11 @@
 <template>
-    <div class="text-center" >
-        <h2>Votre score : {{ playerScore }}</h2>
-    </div>
+    <h1 class="text-center my-4">
+        Votre score : {{ playerScore }}
+    </h1>
+
     <ScoreListManager />
-    <div class="text-center mb-4">
+
+    <div class="text-center my-3">
         <RouterLink to="/" class="btn btn-primary">Retour à l'accueil</RouterLink>
     </div>
 </template>
@@ -44,7 +46,7 @@ export default {
         };
     },
     created() {
-        if(!participationStorageService.getParticipationScore()){
+        if (!participationStorageService.getParticipationScore()) {
             this.$router.push('/');
         }
 
