@@ -67,6 +67,50 @@
 </template>
 
 <script>
+/**
+ * Component: QuestionCRUForm
+ * Description: A form component for creating, reading, and updating a question.
+ *
+ * Props:
+ *   - question: [Object] The question object.
+ *   - maxValPosition: [Number] The maximum value for the question position.
+ *   - titreForm: [String] The form title.
+ *   - submitButtonText: [String] The text for the submit button.
+ *   - resetButtonText: [String] The text for the reset button. Default: "Annuler"
+ *   - displayResetButton: [Boolean] Whether to display the reset button. Default: true
+ *   - readOnly: [Boolean] Whether the form is in read-only mode. Default: false
+ *   - submitButtonShowModal: [Boolean] Whether to show a modal on submit button click. Default: false
+ *   - resetButtonShowModal: [Boolean] Whether to show a modal on reset button click. Default: false
+ *
+ * Components:
+ *   - ImageUpload: The component for uploading images.
+ *
+ * Data:
+ *   - questionCopy: [Object] A copy of the question object with possibleAnswers as a new array.
+ *   - error: [String] The error message.
+ *
+ * Watch:
+ *   - question: Watches changes to the question prop and updates the questionCopy accordingly.
+ *
+ * Methods:
+ *   - handleChangeImage(fileDataUrl): Handles the image change event.
+ *     @param {String} fileDataUrl - The file data URL of the uploaded image.
+ *
+ *   - handleClickAddPossibleAnswer(): Handles the click event to add a possible answer.
+ *
+ *   - handleClickDeletePossibleAnswer(index): Handles the click event to delete a possible answer.
+ *     @param {Number} index - The index of the possible answer to delete.
+ *
+ *   - handleChangePossibleAnswerIsCorrect(index): Handles the change event of a possible answer's isCorrect property.
+ *     Ensures only one possible answer can be marked as correct.
+ *     @param {Number} index - The index of the selected possible answer.
+ *
+ *   - handleClickSubmitQuestion(): Handles the click event to submit the question.
+ *     Emits the "submit-question" event with the questionCopy as the payload.
+ *
+ *   - handleResetQuestion(): Handles the click event to reset the question.
+ *     Emits the "reset-question" event with the questionCopy as the payload.
+ */
 import ImageUpload from "@/components/ImageUpload.vue";
 
 export default {
@@ -116,15 +160,31 @@ export default {
         },
     },
     methods: {
+        /**
+         * Handles the image change event.
+         * @param {String} fileDataUrl - The file data URL of the uploaded image.
+         */
         handleChangeImage(fileDataUrl) {
             this.questionCopy.image = fileDataUrl;
         },
+        /**
+         * Handles the click event to add a possible answer.
+         */
         handleClickAddPossibleAnswer() {
             this.questionCopy.possibleAnswers.push({ text: '', isCorrect: false });
         },
+        /**
+         * Handles the click event to delete a possible answer.
+         * @param {Number} index - The index of the possible answer to delete.
+         */
         handleClickDeletePossibleAnswer(index) {
             this.questionCopy.possibleAnswers.splice(index, 1);
         },
+         /**
+         * Handles the change event of a possible answer's isCorrect property.
+         * Ensures only one possible answer can be marked as correct.
+         * @param {Number} index - The index of the selected possible answer.
+         */
         handleChangePossibleAnswerIsCorrect(index) {
             for (let i = 0; i < this.questionCopy.possibleAnswers.length; i++) {
                 const POSSIBLE_ANSWER = this.questionCopy.possibleAnswers[i];
@@ -134,6 +194,10 @@ export default {
                 }
             }
         },
+         /**
+         * Handles the click event to submit the question.
+         * Emits the "submit-question" event with the questionCopy as the payload.
+         */
         handleClickSubmitQuestion() {
             if (!this.questionCopy.titre || !this.questionCopy.intitule || this.questionCopy.position < 1 || this.questionCopy.position > this.maxValPosition || !this.questionCopy.image) {
                 return;
@@ -163,6 +227,10 @@ export default {
 
             this.$emit("submit-question", this.questionCopy);
         },
+        /**
+         * Handles the click event to reset the question.
+         * Emits the "reset-question" event with the questionCopy as the payload.
+         */
         handleResetQuestion() {
             this.$emit("reset-question", this.questionCopy);
         },

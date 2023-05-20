@@ -22,6 +22,20 @@
 </template>
 
 <script>
+/**
+ * Component: QuestionDisplay
+ * Description: Displays a question and handles answer selection.
+ *
+ * Emits:
+ *   - answer-selected: Emitted when an answer is selected.
+ *
+ * Props:
+ *   - question: [Object] The question object to be displayed.
+ *
+ * Methods:
+ *   - selectAnswer(possibleAnswerIndex): Selects an answer and emits the "answer-selected" event.
+ *     @param {Number} possibleAnswerIndex - The index of the selected possible answer (1-based index).
+ */
 export default {
     name: 'QuestionDisplay',
     emits: ["answer-selected"],
@@ -31,6 +45,10 @@ export default {
         }
     },
     methods: {
+        /**
+         * Selects an answer and emits the "answer-selected" event.
+         * @param {Number} possibleAnswerIndex - The index of the selected possible answer (1-based index).
+         */
         selectAnswer(possibleAnswerIndex) {
             this.$emit('answer-selected', possibleAnswerIndex + 1);
         }

@@ -26,21 +26,44 @@
                     <button class="btn m-1" type="button" @click="handleClickUpdateQuestion(question.id)">
                         <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn mb-4" type="button" data-bs-toggle="modal"
+                    <button class="btn mb-1" type="button" data-bs-toggle="modal"
                         :data-bs-target="'#validation-modal-' + question.id">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
             </tr>
-            <ValidationModal titre="Avertissement !"
-                :body="'Voulez vous supprimer la question  ' + question.id + ' ?'" :id="'validation-modal-' + question.id"
-                @modal-click-btn-ok="handleClickDeleteQuestion(question.id)" />
+            <ValidationModal titre="Avertissement !" :body="'Voulez vous supprimer la question  ' + question.id + ' ?'"
+                :id="'validation-modal-' + question.id" @modal-click-btn-ok="handleClickDeleteQuestion(question.id)" />
         </tbody>
     </table>
 </template>
 
-
 <script>
+/**
+ * Component: ListQuestionsDisplay
+ * Description: A component for displaying a list of questions.
+ *
+ * Props:
+ *   - token: [String] The authentication token. Default: ""
+ *
+ * Components:
+ *   - ValidationModal: The modal component for validation purposes.
+ *
+ * Data:
+ *   - allQuestions: [Array] An array of all the questions.
+ *
+ * Methods:
+ *   - handleClickReadQuestion(id): Handles the click event to navigate to the read question page.
+ *     @param {Number} id - The ID of the question.
+ *
+ *   - handleClickUpdateQuestion(id): Handles the click event to navigate to the edit question page.
+ *     @param {Number} id - The ID of the question.
+ *
+ *   - handleClickDeleteQuestion(id): Handles the click event to delete a question.
+ *     @param {Number} id - The ID of the question.
+ *
+ *   - loadAllQuestions(): Loads all the questions from the server.
+ */
 import participationStorageService from "@/services/ParticipationStorageService.js";
 import ValidationModal from "@/components/ValidationModal.vue"
 import quizApiService from "@/services/QuizApiService.js";
@@ -61,12 +84,24 @@ export default {
         this.loadAllQuestions();
     },
     methods: {
+        /**
+         * Handles the click event to navigate to the read question page.
+         * @param {Number} id - The ID of the question.
+         */
         handleClickReadQuestion(id) {
             this.$router.push(`/read-question/${id}`);
         },
+        /**
+         * Handles the click event to navigate to the edit question page.
+         * @param {Number} id - The ID of the question.
+         */
         handleClickUpdateQuestion(id) {
             this.$router.push(`/edit-question/${id}`);
         },
+        /**
+         * Handles the click event to delete a question.
+         * @param {Number} id - The ID of the question.
+         */
         async handleClickDeleteQuestion(id) {
             quizApiService.deleteQuestionById(id, this.token)
                 .then(response => {
@@ -85,6 +120,9 @@ export default {
                     }
                 });
         },
+        /**
+         * Loads all the questions from the server.
+         */
         async loadAllQuestions() {
             quizApiService
                 .getAllQuestions()

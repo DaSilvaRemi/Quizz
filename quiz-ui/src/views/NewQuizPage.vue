@@ -15,6 +15,17 @@
 </template>
 
 <script>
+/**
+ * Component: NewQuizPage
+ * Description: Represents the page for starting a new quiz.
+ *
+ * Data:
+ *   - username (String): The username of the player.
+ *
+ * Methods:
+ *   - created(): Lifecycle hook called when the component is created. Retrieves the player name from storage.
+ *   - launchNewQuiz(): Launches a new quiz by clearing storage, saving the player name, and navigating to the questions page.
+ */
 import participationStorageService from "@/services/ParticipationStorageService.js";
 
 export default {
@@ -28,6 +39,9 @@ export default {
     this.username = participationStorageService.getPlayerName() ?? '';
   },
   methods: {
+    /**
+     * Launches a new quiz by clearing storage, saving the player name, and navigating to the questions page.
+     */
     launchNewQuiz() {
       if(!this.username){
         return;

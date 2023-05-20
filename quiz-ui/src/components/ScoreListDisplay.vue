@@ -20,6 +20,13 @@
 </template>
 
 <script>
+/**
+ * Component: ScoreListDisplay
+ * Description: Displays a list of registered scores.
+ *
+ * Props:
+ *   - registeredScores: [Array] An array of registered scores to be displayed.
+ */
 export default {
   name: "ScoreListDisplay",
   props: {

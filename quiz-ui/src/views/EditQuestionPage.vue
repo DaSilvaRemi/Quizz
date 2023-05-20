@@ -8,6 +8,35 @@
 </template>
   
 <script>
+/**
+ * Component: EditQuestionPage
+ * Description: Represents the page for editing an existing question by the admin.
+ *
+ * Components:
+ *   - AdminTabNav: The navigation component for the admin.
+ *   - QuestionCRUForm: The form component for creating or updating a question.
+ *   - ValidationModal: The modal component for displaying a validation message.
+ *
+ * Data:
+ *   - question: An object representing the question being edited.
+ *     - id: The ID of the question.
+ *     - titre: The title of the question.
+ *     - intitule: The content of the question.
+ *     - position: The position of the question.
+ *     - image: The image associated with the question.
+ *     - possibleAnswers: An array of possible answers for the question.
+ *   - maxValPosition: The maximum value for the question position.
+ *   - token: The authentication token of the admin.
+ *
+ * Created:
+ *   - Fetches the quiz information to determine the maximum value for the question position.
+ *   - Fetches the existing question data to populate the form for editing.
+ *
+ * Methods:
+ *   - handleSubmitQuestionEvent: Handles the submission of the question form and displays a validation modal.
+ *   - handleClickEditQuestionButton: Handles the click event of the edit question button and sends the updated question data to the server.
+ *   - handleResetQuestionEvent: Handles the reset event of the question form and redirects to the list of questions page.
+ */
 import quizApiService from "@/services/QuizApiService";
 import participationStorageService from "@/services/ParticipationStorageService.js";
 import AdminTabNav from "@/components/AdminTabNav.vue";
@@ -80,11 +109,18 @@ export default {
         })
     },
     methods: {
+        /**
+         * Handles the submission of the question form and displays a validation modal.
+         * @param {Object} question - The question data to be submitted.
+         */
         handleSubmitQuestionEvent(question) {
             this.question = question;
             const VALIDATION_MODAL = new bootstrap.Modal(document.getElementById('validation-modal'));
             VALIDATION_MODAL.show();
         },
+        /**
+         * Handles the click event of the edit question button and sends the updated question data to the server.
+         */
         async handleClickEditQuestionButton() {
             quizApiService.putQuestion(
                 this.question.id,
@@ -109,6 +145,9 @@ export default {
                 }
             })
         },
+        /**
+         * Handles the reset event of the question form and redirects to the list of questions page.
+         */
         handleResetQuestionEvent() {
             this.$router.push("/list-questions");
         }

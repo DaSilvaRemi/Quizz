@@ -28,6 +28,18 @@
 </template>
 
 <script>
+/**
+ * Component: AppHeader
+ * Description: Represents the header component of the application.
+ *
+ * Data:
+ *   - token: The token retrieved from the participation storage service.
+ *
+ * Methods:
+ *   - handleClickAdmin: Handles the click event on the Admin button and redirects the user to the appropriate route based on the token.
+ *                        If the token is not available, it redirects to the login page. Otherwise, it redirects to the list of questions page.
+ */
+
 import { RouterLink } from 'vue-router';
 import participationStorageService from "@/services/ParticipationStorageService.js";
 
@@ -39,6 +51,10 @@ export default {
     }
   },
   methods: {
+    /**
+     * Handles the click event on the Admin button and redirects the user to the appropriate route based on the token.
+     * If the token is not available, it redirects to the login page. Otherwise, it redirects to the list of questions page.
+     */
     handleClickAdmin() {
       const TOKEN = participationStorageService.getToken();
 

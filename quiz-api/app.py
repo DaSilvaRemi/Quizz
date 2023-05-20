@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 from flask_cors import CORS
 import jwt_utils
 import hashlib
@@ -11,7 +11,14 @@ CORS(app)
 
 # UTILS ENDPOINTS
 @app.route('/quiz-info', methods=['GET'])
-def get_quiz_info():
+def get_quiz_info() -> Response:
+    """
+    Get the quiz information including the size of questions and player scores.
+
+    Returns:
+        Response: The quiz information including the size of questions and player scores.
+    """
+
     scores = []
     players: list[Player] = Player.get_all_player()
 
@@ -21,7 +28,14 @@ def get_quiz_info():
     return {"size": Question.get_nb_questions(), "scores": scores}, HTTPStatus.OK.value
 
 @app.route('/login', methods=['POST'])
-def login():
+def login() -> Response:
+    """
+    Log in a user by checking the password.
+
+    Returns:
+        Response: The login result including the token if successful or UNAUTHORIZED status if unsuccessful.
+    """
+
     payload: dict = request.get_json()
     password = payload['password'].encode('UTF-8')
     hashed = hashlib.md5(password).digest()
@@ -32,7 +46,14 @@ def login():
     return {"token": jwt_utils.build_token()}, HTTPStatus.OK.value
 
 @app.route('/rebuild-db', methods=['POST'])
-def rebuild_db():
+def rebuild_db() -> Response:
+    """
+    Rebuild the database.
+
+    Returns:
+        Response: The result of the database rebuild or UNAUTHORIZED status if the authorization fails.
+    """
+
     authorization = request.headers.get('Authorization')
     if not authorization or not authorization.startswith('Bearer '):
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
@@ -49,7 +70,15 @@ def rebuild_db():
 # QUESTIONS
 
 @app.route('/questions', methods=['POST'])
-def create_new_question():
+def create_new_question() -> Response:
+    """
+    Create a new question.
+
+    Returns:
+        Response: The newly created question or UNAUTHORIZED status if the authorization fails,
+        or BAD_REQUEST status if the request data is invalid.
+    """
+
     authorization = request.headers.get('Authorization')
     if not authorization or not authorization.startswith('Bearer '):
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
@@ -71,7 +100,17 @@ def create_new_question():
 
 
 @app.route('/questions/<id_question>', methods=['GET'])
-def get_question_by_id(id_question):
+def get_question_by_id(id_question: int) -> Response:
+    """
+    Get a question by its ID.
+
+    Args:
+        id_question (int): The ID of the question.
+
+    Returns:
+        Response: The question data if found or NOT_FOUND status if the question is not found.
+    """
+
     try:
         myQuestion = Question.get_by_id(id_question)
         return myQuestion.to_json()
@@ -79,7 +118,14 @@ def get_question_by_id(id_question):
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
 @app.route('/questions', methods=['GET'])
-def get_question_by_position():
+def get_question_by_position() -> Response:
+    """
+    Get a question by its position.
+
+    Returns:
+        Response: The question data if found or NOT_FOUND status if the question is not found.
+    """
+
     try:
         position = request.args.get('position')
         myQuestion = Question.get_by_position(position)
@@ -88,7 +134,14 @@ def get_question_by_position():
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
     
 @app.route('/questions/all', methods=['GET'])
-def get_all_question():
+def get_all_question() -> Response:
+    """
+    Get all questions.
+
+    Returns:
+        Response: The list of all questions.
+    """
+
     try:
         questions_json = {"questions": []}
         questions = Question.get_all_questions()
@@ -101,7 +154,18 @@ def get_all_question():
         return HTTPStatus.INTERNAL_SERVER_ERROR.description, HTTPStatus.INTERNAL_SERVER_ERROR.value
     
 @app.route('/questions/<id_question>', methods=['PUT'])
-def update_question_by_id(id_question):
+def update_question_by_id(id_question: int) -> Response:
+    """
+    Update a question by its ID.
+
+    Args:
+        id_question (int): The ID of the question to update.
+
+    Returns:
+        Response: The result of the question update or NOT_FOUND status if the question is not found,
+        or BAD_REQUEST status if the request data is invalid.
+    """
+     
     try:
         myQuestion = Question.get_by_id(id_question)
     except Exception as e:
@@ -127,7 +191,18 @@ def update_question_by_id(id_question):
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
 @app.route('/questions/<id_question>', methods=['DELETE'])
-def delete_question_by_id(id_question):
+def delete_question_by_id(id_question: int) -> Response:
+    """
+    Delete a question by its ID.
+
+    Args:
+        id_question (int): The ID of the question to delete.
+
+    Returns:
+        Response: The result of the question deletion or NOT_FOUND status if the question is not found,
+        or UNAUTHORIZED status if the authorization fails.
+    """
+
     authorization = request.headers.get('Authorization')
     if not authorization or not authorization.startswith('Bearer '):
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
@@ -151,7 +226,14 @@ def delete_question_by_id(id_question):
 
 
 @app.route('/questions/all', methods=['DELETE'])
-def delete_all_questions():
+def delete_all_questions() -> Response:
+    """
+    Delete all questions.
+
+    Returns:
+        Response: The result of the question deletion or UNAUTHORIZED status if the authorization fails.
+    """
+
     authorization = request.headers.get('Authorization')
     if not authorization or not authorization.startswith('Bearer '):
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
@@ -171,7 +253,14 @@ def delete_all_questions():
 
 # PARTICIPATIONS
 @app.route('/participations', methods=['POST'])
-def post_participations():
+def post_participations() -> Response:
+    """
+    Post the participations and calculate the player's score.
+
+    Returns:
+        Response: The player's score if successful or BAD_REQUEST status if the request data is invalid.
+    """
+
     body = request.get_json()
 
     player = Player(None, body['playerName'], 0)
@@ -204,7 +293,14 @@ def post_participations():
     return {"playerName": player.name, "score": player.score}, HTTPStatus.OK.value
         
 @app.route('/participations/all', methods=['DELETE'])
-def delete_all_participations():
+def delete_all_participations() -> Response:
+    """
+    Delete all participations.
+
+    Returns:
+        Response: The result of the participation deletion or UNAUTHORIZED status if the authorization fails.
+    """
+     
     authorization = request.headers.get('Authorization')
     if not authorization or not authorization.startswith('Bearer '):
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value

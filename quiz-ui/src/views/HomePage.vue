@@ -7,6 +7,15 @@
 </template>
 
 <script>
+/**
+ * Component: HomePage
+ * Description: Represents the home page of the application.
+ *
+ * Components:
+ *   - ScoreListManager: The component for managing and displaying the list of scores.
+ *
+ * No data or methods defined in this component.
+ */
 import ScoreListManager from "@/components/ScoreListManager.vue";
 
 export default {

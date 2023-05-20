@@ -19,6 +19,18 @@
 </template>
 
 <script>
+/**
+ * Component: ValidationModal
+ * Description: Represents a validation modal with a title, body, and an OK button.
+ *
+ * Props:
+ *   - titre: [String] The title of the validation modal.
+ *   - body: [String] The body content of the validation modal.
+ *   - id: [String] The unique ID of the validation modal. (Type: String, Default: "validation-modal")
+ *
+ * Methods:
+ *   - handleClickButtonOk: Handles the click event on the OK button and emits a "modal-click-btn-ok" event.
+ */
 export default {
     name: "ValidationModal",
     props: {
@@ -30,6 +42,9 @@ export default {
         }
     },
     methods:{
+        /**
+        * Handles the click event on the OK button and emits a "modal-click-btn-ok" event.
+        */
         handleClickButtonOk(){
             this.$emit("modal-click-btn-ok");
         }

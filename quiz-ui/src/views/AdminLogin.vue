@@ -17,6 +17,17 @@
 </template>
 
 <script>
+/**
+ * Component: AdminLogin
+ * Description: Represents the login component for the admin.
+ *
+ * Data:
+ *   - password: The password entered by the admin.
+ *   - error: Indicates if there was an error during the login process.
+ *
+ * Methods:
+ *   - login: Performs the login process by sending the password to the server and handling the response.
+ */
 import quizApiService from "@/services/QuizApiService.js";
 import participationStorageService from "@/services/ParticipationStorageService.js";
 
@@ -29,6 +40,9 @@ export default {
         };
     },
     methods: {
+        /**
+         * Performs the login process by sending the password to the server and handling the response.
+         */
         login() {
             if(!this.password){
                 return;

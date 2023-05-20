@@ -6,6 +6,25 @@
 </template>
 
 <script>
+/**
+ * Component: QuestionManager
+ * Description: Represents the manager for handling quiz questions.
+ *
+ * Components:
+ *   - QuestionDisplay: Component for displaying a single question.
+ *
+ * Data:
+ *   - currentQuestion (Object): The currently displayed question.
+ *   - currentQuestionPosition (Number): The position of the current question.
+ *   - totalNumberOfQuestion (Number): The total number of questions in the quiz.
+ *   - playerAnswers (Array): The player's answers to the questions.
+ *
+ * Methods:
+ *   - created(): Lifecycle hook called when the component is created. Retrieves the total number of questions in the quiz.
+ *   - loadQuestionByPosition(): Loads the question based on the current question position.
+ *   - answerClickedHandler(possibleAnswerIndex): Handles the event when a possible answer is clicked.
+ *   - endQuiz(): Handles the end of the quiz by saving the player's participation and redirecting to the score page.
+ */
 import QuestionDisplay from "@/components/QuestionDisplay.vue";
 import quizApiService from "@/services/QuizApiService.js";
 import participationStorageService from "@/services/ParticipationStorageService.js";
@@ -23,7 +42,27 @@ export default {
             playerAnswers: []
         };
     },
+    async created() {
+        quizApiService.getQuizInfo()
+            .then((response) => {
+                if (response.status !== 200) {
+                    const ERROR = `CODE : ${response.status} getQuizInfo`
+                    return Promise.reject(ERROR);
+                }
+
+                this.totalNumberOfQuestion = response.data.size;
+            }
+            ).catch((error) => {
+                console.log(error);
+            }
+            );
+        this.loadQuestionByPosition();
+    },
     methods: {
+        /**
+         * Retrieves the question data from the API response and assigns it to the 'currentQuestion' data property.
+         * It is called when the component is created and when the user selects an answer.
+         */
         async loadQuestionByPosition() {
             quizApiService.getQuestionByPosition(this.currentQuestionPosition)
                 .then((response) => {
@@ -40,6 +79,11 @@ export default {
                 )
                 ;
         },
+        /**
+         * Adds the index of the clicked answer to the 'playerAnswers' array.
+         * If it is the last question, calls the 'endQuiz' method, otherwise, increments the 'currentQuestionPosition' and loads the next question.
+         * @param {Number} possibleAnswerIndex - The index of the clicked possible answer.
+         */
         async answerClickedHandler(possibleAnswerIndex) {
             this.playerAnswers.push(possibleAnswerIndex);
 
@@ -50,6 +94,11 @@ export default {
             this.currentQuestionPosition++;
             this.loadQuestionByPosition();
         },
+        /**
+         * Saves the player's participation by sending the player name and answers to the API.
+         * If the API response is successful, saves the participation score to the local storage and redirects to the score page.
+         * It is called when the user finishes answering all the questions.
+         */
         async endQuiz() {
             const PLAYER_NAME = participationStorageService.getPlayerName();
             quizApiService.postParticipation(PLAYER_NAME, this.playerAnswers)
@@ -67,23 +116,6 @@ export default {
                 }
                 );
         }
-    },
-    async created() {
-        quizApiService.getQuizInfo()
-            .then((response) => {
-                if (response.status !== 200) {
-                    const ERROR = `CODE : ${response.status} getQuizInfo`
-                    return Promise.reject(ERROR);
-                }
-
-                this.totalNumberOfQuestion = response.data.size;
-            }
-            ).catch((error) => {
-                console.log(error);
-            }
-            );
-        this.loadQuestionByPosition();
-    },
+    }
 }
-
 </script>
