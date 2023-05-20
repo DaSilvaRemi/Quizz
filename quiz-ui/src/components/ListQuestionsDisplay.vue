@@ -1,6 +1,7 @@
 <template>
     <div class="mx-5 mt-4 mb-2">
     <table class="table table-bordered">
+        <thead style="background-color: lightskyblue;">
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Titre</th>
@@ -11,7 +12,7 @@
             </tr>
         </thead>
         <tbody v-for="(question, index) in allQuestions" v-bind:key="index">
-            <tr>
+            <tr :class="{ 'bg-light': index % 2 }">
                 <td>{{ question.id }}</td>
                 <td>{{ question.title }}</td>
                 <td>{{ question.text }}</td>
