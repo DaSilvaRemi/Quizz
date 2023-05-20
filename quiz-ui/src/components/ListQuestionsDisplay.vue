@@ -26,12 +26,14 @@
                     <button class="btn mb-4" type="button" @click="handleClickUpdateQuestion(question.id)">
                         <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn mb-4" type="button" data-bs-toggle="modal" data-bs-target="#validation-modal">
+                    <button class="btn mb-4" type="button" data-bs-toggle="modal"
+                        :data-bs-target="'#validation-modal-' + question.id">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
             </tr>
-            <ValidationModal titre="Avertissement !" body="Voulez vous supprimer cette question ?"
+            <ValidationModal titre="Avertissement !"
+                :body="'Voulez vous supprimer la question  ' + question.id + ' ?'" :id="'validation-modal-' + question.id"
                 @modal-click-btn-ok="handleClickDeleteQuestion(question.id)" />
         </tbody>
     </table>
@@ -52,21 +54,21 @@ export default {
     },
     data() {
         return {
-            allQuestions: [],
+            allQuestions: []
         };
     },
     async created() {
-        this.loadAllQuestions()
+        this.loadAllQuestions();
     },
     methods: {
-        handleClickReadQuestion(index) {
-            this.$router.push(`/read-question/${index}`);
+        handleClickReadQuestion(id) {
+            this.$router.push(`/read-question/${id}`);
         },
-        handleClickUpdateQuestion(index) {
-            this.$router.push(`/edit-question/${index}`);
+        handleClickUpdateQuestion(id) {
+            this.$router.push(`/edit-question/${id}`);
         },
-        async handleClickDeleteQuestion(index) {
-            quizApiService.deleteQuestionById(index, this.token)
+        async handleClickDeleteQuestion(id) {
+            quizApiService.deleteQuestionById(id, this.token)
                 .then(response => {
                     if (response.status !== 204) {
                         const ERROR = `CODE : ${response.status} postQuestion`

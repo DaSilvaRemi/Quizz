@@ -24,6 +24,9 @@ export default {
       username: ''
     };
   },
+  created(){
+    this.username = participationStorageService.getPlayerName() ?? '';
+  },
   methods: {
     launchNewQuiz() {
       if(!this.username){

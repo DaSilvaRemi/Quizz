@@ -1,5 +1,5 @@
 <template>
-    <div class="modal" id="validation-modal" tabindex="-1">
+    <div class="modal" :id="id" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -24,6 +24,10 @@ export default {
     props: {
         titre: String,
         body: String,
+        id: {
+            type: String,
+            default: "validation-modal"
+        }
     },
     methods:{
         handleClickButtonOk(){
