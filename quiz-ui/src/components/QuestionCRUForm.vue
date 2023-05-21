@@ -26,12 +26,12 @@ h2 {
                     v-model="questionCopy.position" :disabled="readOnly" placeholder="Position de la question" />
             </div>
 
-            <img class="img-fluid" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly"
-                style="max-width:400px">
 
             <div class="form-outline mb-4">
                 <h2 class="form-label">Image</h2>
                 <ImageUpload @file-change="handleChangeImage" :image="questionCopy.image" :readOnly="readOnly" />
+                <img class="img-fluid mt-4" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly"
+                    style="max-width:350px">
             </div>
 
                 <h2 class="form-label" for="position">Réponses possibles</h2>
