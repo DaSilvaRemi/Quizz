@@ -219,25 +219,16 @@ export default {
                 return;
             }
 
-            let count = 0;
-            let possibelAnswersIsValid = true;
-            this.questionCopy.possibleAnswers.forEach((possibleAnswer) => {
-                if (!possibleAnswer.text) {
-                    possibelAnswersIsValid = false;
-                    return;
-                }
-
-                if (possibleAnswer.isCorrect) {
-                    count++;
-                }
-            });
-
-            if (!possibelAnswersIsValid) {
+            if (this.questionCopy.possibleAnswers.length < 2) {
+                this.error = "Veuillez donner au moins deux réponses possibles.";
                 return;
             }
 
+            let count = this.questionCopy.possibleAnswers.filter(pa => pa.isCorrect).length;
+
             if (count !== 1) {
-                this.error = "Une seule des réponses possible doit être bonne !";
+                if (!count) this.error = "Veuillez sélectionner une réponse valide."
+                else this.error = "Seule une réponse peut être valide.";
                 return;
             }
 
