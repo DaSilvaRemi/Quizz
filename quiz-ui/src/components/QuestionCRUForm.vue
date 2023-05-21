@@ -5,7 +5,7 @@ h2 {
 </style>
 
 <template>
-    <div class="d-flex flex-column align-items-center my-4">
+    <div class="d-flex flex-column align-items-center mt-4">
         <form @submit.prevent="handleClickSubmitQuestion">
             <h1 class="text-center mb-3">{{ titreForm }}</h1>
             <div class="form-outline mb-4">
@@ -74,7 +74,7 @@ h2 {
                 <button class="btn btn-primary btn-block mx-4 mb-4" type="submit"
                     :data-bs-toggle="submitButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal">{{
                         submitButtonText }}</button>
-                <button v-if="displayResetButton" class="btn btn-primary btn-block mx- mb-4" type="reset"
+                <button v-if="displayResetButton" class="btn btn-primary btn-block" type="reset"
                     :data-bs-toggle="resetButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal"
                     @click="handleResetQuestion">{{ resetButtonText }}</button>
             </div>

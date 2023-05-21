@@ -7,7 +7,7 @@
     <ListQuestionsDisplay :token="token" />
 
     <div class="text-center my-3">
-        <RouterLink to="/create-question" class="btn btn-primary mb-4">Créer question</RouterLink>
+        <RouterLink to="/create-question" class="btn btn-primary">Créer question</RouterLink>
     </div>
 </template>
 

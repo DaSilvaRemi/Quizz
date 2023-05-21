@@ -6,7 +6,7 @@
   <ScoreListManager />
 
   <div class="text-center my-3">
-    <RouterLink to="/new-quiz" class="btn btn-primary mb-4">Démarrer le quiz !</RouterLink>
+    <RouterLink to="/new-quiz" class="btn btn-primary">Démarrer le quiz !</RouterLink>
   </div>
 </template>
 

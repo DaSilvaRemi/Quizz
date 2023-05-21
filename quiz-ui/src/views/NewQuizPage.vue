@@ -1,14 +1,14 @@
 <template>
-  <div class="d-flex flex-column align-items-center pt-5">
+  <div class="d-flex flex-column align-items-center my-4">
     <form id="new-quiz-form" @submit.prevent="launchNewQuiz">
-      <h2 class="text-center">Commencer un nouveau quiz</h2>
+      <h1 class="text-center mb-4">Commencer un nouveau quiz</h1>
       <div class="form-outline mb-4">
         <label class="form-label" for="nom-joueur">Saisissez votre nom : </label>
         <input class="form-control" type="text" id="nom-joueur" name="nom-joueur" placeholder="Votre nom"
           aria-describedby="Le nom qui sera affiché sur la table des scores" v-model="username" required>
       </div>
       <div class="text-center">
-        <button type="submit" class="btn btn-primary btn-block mb-4">Commencer !</button>
+        <button type="submit" class="btn btn-primary btn-block">Commencer !</button>
       </div>
     </form>
   </div>
@@ -35,7 +35,7 @@ export default {
       username: ''
     };
   },
-  created(){
+  created() {
     this.username = participationStorageService.getPlayerName() ?? '';
   },
   methods: {
@@ -43,7 +43,7 @@ export default {
      * Launches a new quiz by clearing storage, saving the player name, and navigating to the questions page.
      */
     launchNewQuiz() {
-      if(!this.username){
+      if (!this.username) {
         return;
       }
 
