@@ -1,21 +1,27 @@
+<style scoped>
+h2 {
+    font-size: larger;
+}
+</style>
+
 <template>
     <div class="d-flex flex-column align-items-center my-4">
         <form @submit.prevent="handleClickSubmitQuestion">
             <h1 class="text-center mb-3">{{ titreForm }}</h1>
             <div class="form-outline mb-4">
-                <label class="form-label" for="titre">Titre</label>
+                <h2 class="form-label" for="titre">Titre</h2>
                 <input type="text" id="titre" name="titre" class="form-control" placeholder="Mon titre"
                     v-model="questionCopy.titre" required :disabled="readOnly" />
             </div>
 
             <div class="form-outline mb-4">
-                <label class="form-label" for="intitule">Intitulé</label>
+                <h2 class="form-label" for="intitule">Intitulé</h2>
                 <textarea id="intitule" name="intitule" class="form-control" placeholder="Mon intitulé"
                     v-model="questionCopy.intitule" required :disabled="readOnly"></textarea>
             </div>
 
             <div class="form-outline mb-4">
-                <label class="form-label" for="position">Position</label>
+                <h2 class="form-label" for="position">Position</h2>
                 <input type="number" id="position" name="position" class="form-control" min="1" :max="maxValPosition"
                     v-model="questionCopy.position" :disabled="readOnly" />
             </div>
@@ -24,11 +30,11 @@
                 style="max-width:400px">
 
             <div class="form-outline mb-4">
+                <h2 class="form-label">Image</h2>
                 <ImageUpload @file-change="handleChangeImage" :image="questionCopy.image" :readOnly="readOnly" />
             </div>
 
-            <table class="table">
-                <thead>
+                <h2 class="form-label" for="position">Réponses possibles</h2>
                     <tr>
                         <th scope="col">Text</th>
                         <th scope="col">isCorrect</th>
