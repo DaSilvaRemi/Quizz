@@ -10,20 +10,20 @@ h2 {
             <h1 class="text-center mb-3">{{ titreForm }}</h1>
             <div class="form-outline mb-4">
                 <h2 class="form-label" for="titre">Titre</h2>
-                <input type="text" id="titre" name="titre" class="form-control" placeholder="Mon titre"
+                <input type="text" id="titre" name="titre" class="form-control" placeholder="Titre de la question"
                     v-model="questionCopy.titre" required :disabled="readOnly" />
             </div>
 
             <div class="form-outline mb-4">
                 <h2 class="form-label" for="intitule">Intitulé</h2>
-                <textarea id="intitule" name="intitule" class="form-control" placeholder="Mon intitulé"
+                <textarea id="intitule" name="intitule" class="form-control" placeholder="Énoncé de la question"
                     v-model="questionCopy.intitule" required :disabled="readOnly"></textarea>
             </div>
 
             <div class="form-outline mb-4">
                 <h2 class="form-label" for="position">Position</h2>
                 <input type="number" id="position" name="position" class="form-control" min="1" :max="maxValPosition"
-                    v-model="questionCopy.position" :disabled="readOnly" />
+                    v-model="questionCopy.position" :disabled="readOnly" placeholder="Position de la question" />
             </div>
 
             <img class="img-fluid" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly"
