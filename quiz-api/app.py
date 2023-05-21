@@ -10,6 +10,8 @@ app = Flask(__name__)
 CORS(app)
 
 # UTILS ENDPOINTS
+
+
 @app.route('/quiz-info', methods=['GET'])
 def get_quiz_info() -> Response:
     """
@@ -23,9 +25,17 @@ def get_quiz_info() -> Response:
     players: list[Player] = Player.get_all_player()
 
     for player in players:
-        scores.append({"playerName": player.name,"score": player.score})
+        participations = Participation.get_by_id_player(player.id_player)
+        date_participation = ""
+
+        if participations is not None and len(participations) > 0:
+            date_participation = participations[0].date
+
+        scores.append({"playerName": player.name,
+                      "score": player.score, "date": date_participation})
 
     return {"size": Question.get_nb_questions(), "scores": scores}, HTTPStatus.OK.value
+
 
 @app.route('/login', methods=['POST'])
 def login() -> Response:
@@ -44,6 +54,7 @@ def login() -> Response:
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
 
     return {"token": jwt_utils.build_token()}, HTTPStatus.OK.value
+
 
 @app.route('/rebuild-db', methods=['POST'])
 def rebuild_db() -> Response:
@@ -69,6 +80,7 @@ def rebuild_db() -> Response:
 
 # QUESTIONS
 
+
 @app.route('/questions', methods=['POST'])
 def create_new_question() -> Response:
     """
@@ -91,7 +103,6 @@ def create_new_question() -> Response:
 
     try:
         question_data = request.get_json()
-        print(question_data)
         question = Question.from_json(question_data)
         question.save()
         return question.to_json()
@@ -117,6 +128,7 @@ def get_question_by_id(id_question: int) -> Response:
     except Exception as e:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
 
+
 @app.route('/questions', methods=['GET'])
 def get_question_by_position() -> Response:
     """
@@ -132,7 +144,8 @@ def get_question_by_position() -> Response:
         return myQuestion.to_json()
     except Exception as e:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
-    
+
+
 @app.route('/questions/all', methods=['GET'])
 def get_all_question() -> Response:
     """
@@ -152,7 +165,8 @@ def get_all_question() -> Response:
         return questions_json
     except Exception as e:
         return HTTPStatus.INTERNAL_SERVER_ERROR.description, HTTPStatus.INTERNAL_SERVER_ERROR.value
-    
+
+
 @app.route('/questions/<id_question>', methods=['PUT'])
 def update_question_by_id(id_question: int) -> Response:
     """
@@ -165,18 +179,24 @@ def update_question_by_id(id_question: int) -> Response:
         Response: The result of the question update or NOT_FOUND status if the question is not found,
         or BAD_REQUEST status if the request data is invalid.
     """
-     
+
     try:
         myQuestion = Question.get_by_id(id_question)
     except Exception as e:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
-    
+
     try:
         new_data = request.get_json()
-        myQuestion.image    = new_data['image']
+
+        myQuestion.image = new_data['image']
         myQuestion.position = new_data['position']
-        myQuestion.text     = new_data['text']
-        myQuestion.title    = new_data['title']
+        myQuestion.text = new_data['text']
+        myQuestion.title = new_data['title']
+
+        nb_possible_answer_is_correct = len([new_possible_answer for new_possible_answer in new_data['possibleAnswers'] if new_possible_answer['isCorrect']])
+
+        if(nb_possible_answer_is_correct != 1):
+            return HTTPStatus.BAD_REQUEST.description, HTTPStatus.BAD_REQUEST.value
 
         myQuestion.delete_possible_answers()
         for new_possible_answer in new_data['possibleAnswers']:
@@ -189,6 +209,7 @@ def update_question_by_id(id_question: int) -> Response:
         return HTTPStatus.NO_CONTENT.description, HTTPStatus.NO_CONTENT.value
     except Exception as e:
         return HTTPStatus.NOT_FOUND.description, HTTPStatus.NOT_FOUND.value
+
 
 @app.route('/questions/<id_question>', methods=['DELETE'])
 def delete_question_by_id(id_question: int) -> Response:
@@ -212,7 +233,6 @@ def delete_question_by_id(id_question: int) -> Response:
         jwt_utils.decode_token(token)
     except Exception as e:
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
-
 
     myQuestion = Question.get_by_id(id_question)
     if not myQuestion:
@@ -265,33 +285,43 @@ def post_participations() -> Response:
 
     player = Player(None, body['playerName'], 0)
 
-    possible_answers_position: list = body['answers']
+    player_answers_position: list = body['answers']
 
     # Verifie si le joueur a bien repondu a toute les questions
     nb_questions_in_bdd = Question.get_nb_questions()
-    if len(possible_answers_position) != nb_questions_in_bdd:
+    if len(player_answers_position) != nb_questions_in_bdd:
         return HTTPStatus.BAD_REQUEST.description, HTTPStatus.BAD_REQUEST.value
 
     player.save()
 
+    answers_summaries = []
+
     # Pour chaque reponse on verifie si le joueur a bien répondu et dans ce cas on lui ajoute un point
-    for i in range(0, len(possible_answers_position)):
-        possible_answer_position = possible_answers_position[i]
+    for i in range(0, len(player_answers_position)):
+        player_answer_position = player_answers_position[i]
         position_question = i + 1
 
         question = Question.get_by_position(position_question)
         participation = Participation(player.id_player, question.id_question)
-        possible_answer: PossibleAnswer = question.possible_answers[possible_answer_position - 1]
+        possible_answer: PossibleAnswer = question.possible_answers[player_answer_position - 1]
 
-        if possible_answer.is_correct:
+        correct_possible_answer, correct_possible_answer_position = [(question.possible_answers[i], i + 1) for i in range(
+            0, len(question.possible_answers)) if question.possible_answers[i].is_correct][0]
+        player_was_correct = possible_answer.id_possible_answer == correct_possible_answer.id_possible_answer
+
+        if player_was_correct:
             player.score += 1
+
+        answers_summaries.append(
+            {"correctAnswerPosition": correct_possible_answer_position, "wasCorrect": player_was_correct})
 
         participation.save()
 
     player.save()
 
-    return {"playerName": player.name, "score": player.score}, HTTPStatus.OK.value
-        
+    return {"playerName": player.name, "score": player.score, "answersSummaries": answers_summaries}, HTTPStatus.OK.value
+
+
 @app.route('/participations/all', methods=['DELETE'])
 def delete_all_participations() -> Response:
     """
@@ -300,7 +330,7 @@ def delete_all_participations() -> Response:
     Returns:
         Response: The result of the participation deletion or UNAUTHORIZED status if the authorization fails.
     """
-     
+
     authorization = request.headers.get('Authorization')
     if not authorization or not authorization.startswith('Bearer '):
         return HTTPStatus.UNAUTHORIZED.description, HTTPStatus.UNAUTHORIZED.value
