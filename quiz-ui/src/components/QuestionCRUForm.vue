@@ -34,33 +34,40 @@ h2 {
                     style="max-width:350px">
             </div>
 
+            <div class="form-outline mb-4">
                 <h2 class="form-label" for="position">Réponses possibles</h2>
-                    <tr>
-                        <th scope="col">Text</th>
-                        <th scope="col">isCorrect</th>
-                        <th scope="col" v-if="!readOnly">Supprimer</th>
-                    </tr>
-                </thead>
-                <tbody v-for="(possibleAnswer, index) in questionCopy.possibleAnswers" v-bind:key="index">
-                    <tr>
-                        <td>
-                            <input type="text" id="possibleAnswerTexte" name="possibleAnswerTexte" class="form-control"
-                                placeholder="Un texte" v-model="possibleAnswer.text" required :disabled="readOnly" />
-                        </td>
-                        <td>
-                            <input class="form-check-input me-2" type="checkbox" id="possibleAnswerisCorrect"
-                                name="possibleAnswerisCorrect" v-model="possibleAnswer.isCorrect"
-                                @change="handleChangePossibleAnswerIsCorrect(index)" :disabled="readOnly" />
-                        </td>
-                        <td v-if="!readOnly">
-                            <button class="btn mb-4" type="button" @click="handleClickDeletePossibleAnswer(index)"><i
-                                    class="bi bi-x-circle-fill"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-                <button v-if="!readOnly" class="btn mb-4" type="button" @click="handleClickAddPossibleAnswer"><i
-                        class="bi bi-plus-circle-fill"></i></button>
-            </table>
+                <table class="table table-bordered">
+                    <thead style="background-color: lightskyblue;">
+                        <tr>
+                            <th scope="col">Énoncé</th>
+                            <th scope="col">Est correct ?</th>
+                            <th scope="col" v-if="!readOnly">Supprimer</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="(possibleAnswer, index) in questionCopy.possibleAnswers" v-bind:key="index">
+                        <tr :class="{ 'bg-light': index % 2 }">
+                            <td>
+                                <input type="text" id="possibleAnswerTexte" name="possibleAnswerTexte" class="form-control"
+                                    placeholder="Énoncé de la réponse" v-model="possibleAnswer.text" required
+                                    :disabled="readOnly" />
+                            </td>
+                            <td>
+                                <input class="form-check-input" type="checkbox" id="possibleAnswerisCorrect"
+                                    name="possibleAnswerisCorrect" v-model="possibleAnswer.isCorrect"
+                                    @change="handleChangePossibleAnswerIsCorrect(index)" :disabled="readOnly" />
+                            </td>
+                            <td v-if="!readOnly">
+                                <button class="btn mb-4" type="button" @click="handleClickDeletePossibleAnswer(index)">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <button v-if="!readOnly" class="btn p-2" type="button" @click="handleClickAddPossibleAnswer">
+                        <i class="bi bi-plus-circle-fill"> Ajouter une réponse</i>
+                    </button>
+                </table>
+            </div>
 
             <p v-if="error" class="alert alert-danger">{{ error }}</p>
             <div class="text-center my-3">
