@@ -1,60 +1,73 @@
+<style scoped>
+h2 {
+    font-size: larger;
+}
+</style>
+
 <template>
     <div class="d-flex flex-column align-items-center my-4">
         <form @submit.prevent="handleClickSubmitQuestion">
             <h1 class="text-center mb-3">{{ titreForm }}</h1>
             <div class="form-outline mb-4">
-                <label class="form-label" for="titre">Titre</label>
-                <input type="text" id="titre" name="titre" class="form-control" placeholder="Mon titre"
+                <h2 class="form-label" for="titre">Titre</h2>
+                <input type="text" id="titre" name="titre" class="form-control" placeholder="Titre de la question"
                     v-model="questionCopy.titre" required :disabled="readOnly" />
             </div>
 
             <div class="form-outline mb-4">
-                <label class="form-label" for="intitule">Intitulé</label>
-                <textarea id="intitule" name="intitule" class="form-control" placeholder="Mon intitulé"
+                <h2 class="form-label" for="intitule">Intitulé</h2>
+                <textarea id="intitule" name="intitule" class="form-control" placeholder="Énoncé de la question"
                     v-model="questionCopy.intitule" required :disabled="readOnly"></textarea>
             </div>
 
             <div class="form-outline mb-4">
-                <label class="form-label" for="position">Position</label>
+                <h2 class="form-label" for="position">Position</h2>
                 <input type="number" id="position" name="position" class="form-control" min="1" :max="maxValPosition"
-                    v-model="questionCopy.position" :disabled="readOnly" />
+                    v-model="questionCopy.position" :disabled="readOnly" placeholder="Position de la question" />
             </div>
 
-            <img class="img-fluid" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly"
-                style="max-width:400px">
 
             <div class="form-outline mb-4">
+                <h2 class="form-label">Image</h2>
                 <ImageUpload @file-change="handleChangeImage" :image="questionCopy.image" :readOnly="readOnly" />
+                <img class="img-fluid mt-4" :src="questionCopy.image" :alt="questionCopy.image" :disabled="readOnly"
+                    style="max-width:350px">
             </div>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Text</th>
-                        <th scope="col">isCorrect</th>
-                        <th scope="col" v-if="!readOnly">Supprimer</th>
-                    </tr>
-                </thead>
-                <tbody v-for="(possibleAnswer, index) in questionCopy.possibleAnswers" v-bind:key="index">
-                    <tr>
-                        <td>
-                            <input type="text" id="possibleAnswerTexte" name="possibleAnswerTexte" class="form-control"
-                                placeholder="Un texte" v-model="possibleAnswer.text" required :disabled="readOnly" />
-                        </td>
-                        <td>
-                            <input class="form-check-input me-2" type="checkbox" id="possibleAnswerisCorrect"
-                                name="possibleAnswerisCorrect" v-model="possibleAnswer.isCorrect"
-                                @change="handleChangePossibleAnswerIsCorrect(index)" :disabled="readOnly" />
-                        </td>
-                        <td v-if="!readOnly">
-                            <button class="btn mb-4" type="button" @click="handleClickDeletePossibleAnswer(index)"><i
-                                    class="bi bi-x-circle-fill"></i></button>
-                        </td>
-                    </tr>
-                </tbody>
-                <button v-if="!readOnly" class="btn mb-4" type="button" @click="handleClickAddPossibleAnswer"><i
-                        class="bi bi-plus-circle-fill"></i></button>
-            </table>
+            <div class="form-outline mb-4">
+                <h2 class="form-label" for="position">Réponses possibles</h2>
+                <table class="table table-bordered">
+                    <thead style="background-color: lightskyblue;">
+                        <tr>
+                            <th scope="col">Énoncé</th>
+                            <th scope="col">Est correct ?</th>
+                            <th scope="col" v-if="!readOnly">Supprimer</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="(possibleAnswer, index) in questionCopy.possibleAnswers" v-bind:key="index">
+                        <tr :class="{ 'bg-light': index % 2 }">
+                            <td>
+                                <input type="text" id="possibleAnswerTexte" name="possibleAnswerTexte" class="form-control"
+                                    placeholder="Énoncé de la réponse" v-model="possibleAnswer.text" required
+                                    :disabled="readOnly" />
+                            </td>
+                            <td>
+                                <input class="form-check-input" type="checkbox" id="possibleAnswerisCorrect"
+                                    name="possibleAnswerisCorrect" v-model="possibleAnswer.isCorrect"
+                                    @change="handleChangePossibleAnswerIsCorrect(index)" :disabled="readOnly" />
+                            </td>
+                            <td v-if="!readOnly">
+                                <button class="btn mb-4" type="button" @click="handleClickDeletePossibleAnswer(index)">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <button v-if="!readOnly" class="btn p-2" type="button" @click="handleClickAddPossibleAnswer">
+                        <i class="bi bi-plus-circle-fill"> Ajouter une réponse</i>
+                    </button>
+                </table>
+            </div>
 
             <p v-if="error" class="alert alert-danger">{{ error }}</p>
             <div class="text-center my-3">
@@ -206,25 +219,16 @@ export default {
                 return;
             }
 
-            let count = 0;
-            let possibelAnswersIsValid = true;
-            this.questionCopy.possibleAnswers.forEach((possibleAnswer) => {
-                if (!possibleAnswer.text) {
-                    possibelAnswersIsValid = false;
-                    return;
-                }
-
-                if (possibleAnswer.isCorrect) {
-                    count++;
-                }
-            });
-
-            if (!possibelAnswersIsValid) {
+            if (this.questionCopy.possibleAnswers.length < 2) {
+                this.error = "Veuillez donner au moins deux réponses possibles.";
                 return;
             }
 
+            let count = this.questionCopy.possibleAnswers.filter(pa => pa.isCorrect).length;
+
             if (count !== 1) {
-                this.error = "Une seule des réponses possible doit être bonne !";
+                if (!count) this.error = "Veuillez sélectionner une réponse valide."
+                else this.error = "Seule une réponse peut être valide.";
                 return;
             }
 

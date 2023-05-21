@@ -1,5 +1,4 @@
 <template>
-    <label class="form-label" for="image">Image</label>
     <input class="form-control" type="file" name="uploadInput" :disabled="isSaving || readOnly"
         accept="image/jpeg, image/png, image/gif" ref="fileInput" @change="handleChangeFile" required />
     <button class="btn" v-if="file && !readOnly" @click="handleClickRemoveImage"><i
