@@ -40,7 +40,7 @@ h2 {
                     <thead style="background-color: lightskyblue;">
                         <tr>
                             <th scope="col">Énoncé</th>
-                            <th scope="col">Est correct ?</th>
+                            <th scope="col">Réponse correcte</th>
                             <th scope="col" v-if="!readOnly">Supprimer</th>
                         </tr>
                     </thead>
@@ -70,7 +70,7 @@ h2 {
             </div>
 
             <p v-if="error" class="alert alert-danger">{{ error }}</p>
-            <div class="text-center my-3">
+            <div class="text-center mt-3">
                 <button class="btn btn-primary btn-block mx-4 mb-4" type="submit"
                     :data-bs-toggle="submitButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal">{{
                         submitButtonText }}</button>

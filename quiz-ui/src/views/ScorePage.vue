@@ -6,7 +6,7 @@
     <ScoreListManager />
 
     <div class="text-center my-3">
-        <RouterLink to="/" class="btn btn-primary">Retour à l'accueil</RouterLink>
+        <RouterLink to="/" class="btn btn-primary mb-4">Retour à l'accueil</RouterLink>
     </div>
 </template>
 
