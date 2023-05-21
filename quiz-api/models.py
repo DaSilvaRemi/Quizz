@@ -359,17 +359,19 @@ class PossibleAnswer():
 
 
 class Participation:
-    def __init__(self, id_player: int, id_question: int) -> None:
+    def __init__(self, id_player: int, id_question: int, date: str = None) -> None:
         """
         Initializes a Participation object.
 
         Args:
             id_player (int): The ID of the player participating.
             id_question (int): The ID of the question the player participated in.
+            date (str, optional): The date of the participation. Defaults to None.
         """
 
         self.id_player = id_player
         self.id_question = id_question
+        self.date = date
 
     def save(self) -> None:
         """
@@ -386,6 +388,10 @@ class Participation:
         else:
             query = "UPDATE participation SET id_player=? WHERE id_question=?"
             ConnectionManager().execute(query, self.id_player, self.id_question)
+
+        created_participation = Participation.get_by_id_player_and_question(self.id_player, self.id_question)    
+        self.date = created_participation.date
+
 
     def delete(self) -> None:
         """
@@ -443,12 +449,13 @@ class Participation:
         connexionManager = ConnectionManager()
         query = "SELECT * FROM participation WHERE id_player=? AND id_question=?"
         query_result = connexionManager.execute(query, id_player, id_question)
-        elements = query_result.fetchone()
+        element = query_result.fetchone()
 
-        if elements is None:
+        if element is None:
             return None
 
-        return Participation(elements[0], elements[1])
+        id_player, id_question, date = element
+        return Participation(id_player, id_question, date)
 
     @staticmethod
     def get_by_id_player(id_player: int) -> list['Participation']:
@@ -473,8 +480,8 @@ class Participation:
         participations = []
 
         for element in elements:
-            id_player, id_question = element
-            participations.append(Participation(id_player, id_question))
+            id_player, id_question, date = element
+            participations.append(Participation(id_player, id_question, date))
 
         return participations
 
@@ -501,8 +508,8 @@ class Participation:
         participations = []
 
         for element in elements:
-            id_player, id_question = element
-            participations.append(Participation(id_player, id_question))
+            id_player, id_question, date = element
+            participations.append(Participation(id_player, id_question, date))
 
         return participations
 
@@ -516,7 +523,8 @@ class Participation:
 
         return {
             "id_player": self.id_player,
-            "id_question": self.id_question
+            "id_question": self.id_question,
+            "date": self.date
         }
 
     def __str__(self) -> str:
@@ -541,7 +549,7 @@ class Participation:
             'Participation': The created Participation object.
         """
 
-        return Participation(json.get("id_player", None), json.get("id_question", None))
+        return Participation(json.get("id_player", None), json.get("id_question", None), json.get("date", None))
 
 # Player
 
