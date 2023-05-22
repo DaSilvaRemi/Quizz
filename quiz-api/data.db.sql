@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS "participation";
 CREATE TABLE "participation" (
     "id_player" INTEGER NOT NULL,
     "id_question" INTEGER NOT NULL,
-    "date"	TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "date" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("id_player") REFERENCES "player" ("id_player"),
     FOREIGN KEY ("id_question") REFERENCES "question" ("id_question")
 );
