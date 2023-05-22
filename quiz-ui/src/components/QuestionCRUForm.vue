@@ -74,7 +74,7 @@ h2 {
                 <button class="btn btn-primary btn-block mx-4 mb-4" type="submit"
                     :data-bs-toggle="submitButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal">{{
                         submitButtonText }}</button>
-                <button v-if="displayResetButton" class="btn btn-primary btn-block" type="reset"
+                <button v-if="displayResetButton" class="btn btn-primary btn-block mx-4 mb-4" type="reset"
                     :data-bs-toggle="resetButtonShowModal ? 'modal' : ''" data-bs-target="#validation-modal"
                     @click="handleResetQuestion">{{ resetButtonText }}</button>
             </div>
