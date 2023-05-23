@@ -5,8 +5,13 @@
 
     <ScoreListManager />
 
-    <div class="text-center my-3">
-        <RouterLink to="/" class="btn btn-primary mb-4">Retour à l'accueil</RouterLink>
+    <div class="d-flex justify-content-center">
+        <div class=" text-center my-3 mx-3">
+            <RouterLink to="/new-quiz" class="btn btn-primary">Démarrer le quiz !</RouterLink>
+        </div>
+        <div class="text-center my-3 mx-3">
+            <RouterLink to="/" class="btn btn-primary">Retour à l'accueil</RouterLink>
+        </div>
     </div>
 </template>
 
