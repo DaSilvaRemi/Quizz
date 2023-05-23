@@ -51,6 +51,10 @@ export default {
                 }
 
                 this.totalNumberOfQuestion = response.data.size;
+
+                if(this.totalNumberOfQuestion === 0){
+                    this.$router.push('/new-quiz');
+                }
             }
             ).catch((error) => {
                 console.log(error);
