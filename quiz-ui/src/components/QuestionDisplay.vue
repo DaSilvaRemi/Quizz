@@ -13,10 +13,10 @@
                     </button>
                 </ul>
             </div>
-            <div style="margin-left: 10px;">
-                <img v-if="question.image" :src="question.image" class="card-img-top" style="max-width:200px"
-                    alt="<Image introuvable...>">
-            </div>
+        </div>
+        <div style="margin-left: 10px;">
+            <img v-if="question.image" :src="question.image" class="card-img-top" style="max-width:400px"
+                alt="<Image introuvable...>">
         </div>
     </div>
 </template>
